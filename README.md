@@ -1,5 +1,5 @@
 # Anticorruption HA Module
-[![Build status](https://ci.appveyor.com/api/projects/status/37ngnmo4eibw42rg/branch/develop?svg=true)](https://ci.appveyor.com/project/amat27/ha-module/branch/develop) [![Build Status](https://dev.azure.com/BigComputeShanghai/HPC%20HA/_apis/build/status/amat27.ha-module?branchName=develop)](https://dev.azure.com/BigComputeShanghai/HPC%20HA/_build/latest?definitionId=4&branchName=develop) [![codecov](https://codecov.io/gh/amat27/ha-module/branch/develop/graph/badge.svg)](https://codecov.io/gh/amat27/ha-module) [![Codacy Badge](https://api.codacy.com/project/badge/Grade/7236a79bcbb642a89588bf76bf60489a)](https://app.codacy.com/app/amat27/ha-module?utm_source=github.com&utm_medium=referral&utm_content=amat27/ha-module&utm_campaign=Badge_Grade_Dashboard)
+[![Build Status](https://dev.azure.com/BigComputeShanghai/HPC%20HA/_apis/build/status/Azure.hpcpack-high-availability?branchName=develop)](https://dev.azure.com/BigComputeShanghai/HPC%20HA/_build/latest?definitionId=11&branchName=develop)
 
 Algorithms for doing leader election and name resolving with the help of another HA system, serves as anticorruption layer.
 
