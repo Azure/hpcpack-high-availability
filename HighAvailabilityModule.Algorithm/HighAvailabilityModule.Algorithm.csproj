@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>HighAvailabilityModule.Algorithm</RootNamespace>
+    <AssemblyName>HighAvailabilityModule.Algorithm</AssemblyName>
+    <LangVersion>latest</LangVersion>
+	<DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HighAvailabilityModule.Interface\HighAvailabilityModule.Interface.csproj" />
+  </ItemGroup>
+
+</Project>

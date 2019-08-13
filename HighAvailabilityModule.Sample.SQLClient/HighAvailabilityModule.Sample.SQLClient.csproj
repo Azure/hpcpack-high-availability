@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\HighAvailabilityModule.Algorithm\HighAvailabilityModule.Algorithm.csproj" />
+    <ProjectReference Include="..\HighAvailabilityModule.Client.SQL\HighAvailabilityModule.Client.SQL.csproj" />
+  </ItemGroup>
+
+</Project>

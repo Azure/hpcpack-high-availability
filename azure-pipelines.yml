@@ -1,0 +1,149 @@
+# ASP.NET Core (.NET Framework)
+# Build and test ASP.NET Core projects targeting the full .NET Framework.
+# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+
+trigger:
+- master
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/*.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+
+steps:
+- task: NuGetToolInstaller@1
+
+- task: NuGetCommand@2
+  inputs:
+    restoreSolution: '$(solution)'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:DesktopBuildPackageLocation="$(build.artifactStagingDirectory)\WebApp.zip" /p:DeployIisAppPath="Default Web Site"'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'build'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Test/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_W)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.Server.SQL/SQLstartup.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_W)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.UnitTest.SQL/tSQLt.class.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_W)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.UnitTest.SQL/MembershipServerSQLUnitTest.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: runtsqltunittests@0
+  inputs:
+    connectionString: $(CONSTR_W)
+    queryTimeout: '60'
+    rootOutput: '$(System.DefaultWorkingDirectory)/tSQLt-out'
+    testResultsFileName: 'TEST-Results.xml'
+    enableCodeCoverage: false
+    coberturaFileName: 'Cobertura.xml'
+    htmlReportsOutput: '$(System.DefaultWorkingDirectory)/AzurePipelines'
+    testOrClassName: 'Dummy'
+
+# - task: PublishCodeCoverageResults@1
+#   inputs:
+#     codeCoverageTool: 'Cobertura'
+#     summaryFileLocation: '$(Build.SourcesDirectory)/out/Cobertura.xml'
+#     reportDirectory: '$(Build.SourcesDirectory)/out/AzurePipelines.html'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_S)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.Storage.Server/startup.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_S)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.UnitTest.SQL/tSQLt.class.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: SqlAzureDacpacDeployment@1
+  inputs:
+    azureSubscription: $(AZURESUBSCRIPTION)
+    AuthenticationType: 'server'
+    ServerName: $(SERVERNAME)
+    DatabaseName: $(DATABASENAME_S)
+    SqlUsername: $(USERNAME)
+    SqlPassword: $(PASSWORD)
+    deployType: 'SqlTask'
+    SqlFile: '$(System.DefaultWorkingDirectory)/HighAvailabilityModule.UnitTest.SQL/MembershipSQLStorageUnitTest.sql'
+    IpDetectionMethod: 'AutoDetect'
+
+- task: runtsqltunittests@0
+  inputs:
+    connectionString: $(CONSTR_S)
+    queryTimeout: '60'
+    rootOutput: '$(System.DefaultWorkingDirectory)/tSQLt-out'
+    testResultsFileName: 'TEST-Results2.xml'
+    enableCodeCoverage: false
+    coberturaFileName: 'Cobertura2.xml'
+    htmlReportsOutput: '$(System.DefaultWorkingDirectory)/AzurePipelines2'
+    testOrClassName: 'Dummy'
+
+- task: PublishTestResults@2
+  inputs:
+    testResultsFormat: 'JUnit'
+    testResultsFiles: '**/TEST-*.xml'
