@@ -27,7 +27,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighAvailabilityModule.Stor
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighAvailablityModule.Storage.Sample.Client", "HighAvailablityModule.Storage.Sample.Client\HighAvailablityModule.Storage.Sample.Client.csproj", "{0C80FCA0-6492-42C1-8593-06B6908F9A5A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HighAvailabilityModule.Util.SQL", "HighAvailabilityModule.util.SQL\HighAvailabilityModule.Util.SQL.csproj", "{55CED63E-F405-4876-AFFC-ACB3F33FFBD2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighAvailabilityModule.Util.SQL", "HighAvailabilityModule.util.SQL\HighAvailabilityModule.Util.SQL.csproj", "{55CED63E-F405-4876-AFFC-ACB3F33FFBD2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HighAvailabilityModule.Client.SQL", "HighAvailabilityModule.Client.SQL\HighAvailabilityModule.Client.SQL.csproj", "{8EEE57EF-61C8-4827-9F4F-305EFCE84A3D}"
 EndProject

@@ -174,7 +174,7 @@ namespace HighAvailabilityModule.Storage.Client
 
             if (type == "System.String[]")
             {
-                return value.Split(",");
+                return value.Split(",".ToCharArray());
             }
             else
             {
@@ -190,7 +190,7 @@ namespace HighAvailabilityModule.Storage.Client
 
             if (type == "System.Byte[]")
             {
-                string[] s = value.Split(",");
+                string[] s = value.Split(",".ToCharArray());
                 byte[] valueByte = new byte[s.Length];
                 for (int i=0; i<s.Length; i++)
                 {
