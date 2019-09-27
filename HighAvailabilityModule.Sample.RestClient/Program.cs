@@ -48,7 +48,7 @@ namespace HighAvailabilityModule.Sample.RestClient
 
             RestMembershipClient client = new RestMembershipClient(utype, uname, interval);
 
-            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout);
+            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout, string.Empty);
 
             Console.WriteLine("Uuid:{0}",client.Uuid);
             Console.WriteLine("Type:{0}",client.Utype);

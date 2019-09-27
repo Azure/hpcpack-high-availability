@@ -1,0 +1,300 @@
+################################################
+#
+# files.txt - PRS signing file list.
+#
+#   These are all the files that are built into
+#   the installation package
+#
+# Files in SN section are managed dlls, and are verifed by the SN.exe 
+# Files in SIGN section are unmanaged dlls, and are verfied by signtool.exe
+################################################
+
+#!SN
+#!PATH=amd64\retail\bin
+#!PATH=i386\retail\bin
+STRONGNAMEFILES = \
+    CcpAPI.dll                                     \
+    Microsoft.Hpc.Scheduler.Properties.dll         \
+    Microsoft.Hpc.Scheduler.Store.dll              \
+    Microsoft.Hpc.Scheduler.Session.dll            \
+    Microsoft.Hpc.Scheduler.NodeManagement.dll     \
+    Microsoft.Hpc.Scheduler.dll                    \
+    Microsoft.Hpc.StorageManagementInterface.dll   \
+    Microsoft.Hpc.Diagnostics.Helpers.dll          \
+    Microsoft.Hpc.Azure.FileStaging.Client.dll     \
+    Microsoft.Hpc.Azure.DataMovement.dll           \
+    Microsoft.Ccp.Sdm.Manager.dll                  \
+
+MANAGEDFILES = \    
+    Microsoft.Ccp.API.dll                          \
+    Microsoft.Ccp.ClusterManagementInterfaces.dll  \
+    Microsoft.Ccp.ClusterModel.dll                 \
+    Microsoft.Ccp.ComputerModel.dll                \
+    Microsoft.Ccp.DiagnosticModel.dll              \
+    Microsoft.Ccp.NetworkModel.dll                 \ 
+    Microsoft.Ccp.Sdm.Core.dll                     \
+
+    Microsoft.Ccp.Sdm.Store.dll                    \
+    Microsoft.Ccp.Sdm.SqlHelpers.dll               \
+
+    Microsoft.Ccp.Sdm.SystemModel.dll              \   
+    Microsoft.Ccp.TemplateModel.dll                \
+    Microsoft.Ccp.WdsListener.dll                  \
+    Microsoft.Ccp.WdsModel.dll                     \ 
+    Microsoft.Ccp.Win32Helpers.dll                 \   
+    Microsoft.Hpc.NetBootModel.dll                 \
+    StorageManagementSurrogate.exe                 \
+    BrokerBase.dll                                 \
+    EchoSvcLib.dll                                 \
+    HpcBroker.exe                                  \
+    HpcBrokerWorker.exe                            \
+    HpcPack.exe                                    \
+    HpcServiceHost.exe                             \
+    HpcServiceHost32.exe                           \
+    HpcSession.exe                                 \
+    HpcSessionAzure.exe                            \
+    HpcSoaDiagMon.exe                              \
+    HpcSOAWebSvc.exe                               \
+    HpcSync.exe                                    \
+    Microsoft.Hpc.Azure.HpcPackSyncCommon.dll      \    
+    Microsoft.Hpc.BrokerProxyWorkerRole.dll        \
+    Microsoft.Hpc.DataProxy.dll                    \
+    Microsoft.Hpc.SOABurst.dll                     \
+    Microsoft.Hpc.SOADiagLib.dll                   \
+    Microsoft.Hpc.SOADiagMonLib.dll                \
+    Microsoft.Hpc.SOADiagSvc.dll                   \
+    Microsoft.Hpc.SvcBroker.dll                    \
+    Microsoft.Hpc.TraceCore.dll                    \
+    MSMQInterop.dll                                \
+    HpcManagement.exe                              \
+    CcpConsole.exe                                 \
+    HpcNodeManager.exe                             \
+    CcpScheduler.exe                               \
+    CcpSchedulerCore.dll                           \
+    HpcSdm.exe                                     \
+    ClusterCmd.exe                                 \
+    SdmL.exe                                       \
+    sdiag.exe                                      \
+    userui.exe                                     \
+    ccppsh.dll                                     \
+    CCPPSH.Azure.dll                               \
+    Microsoft.Hpc.VirtualNodeModel.dll             \
+    Microsoft.Hpc.Diagnostics.dll                  \
+    Microsoft.Hpc.Diagnostics.Core.dll             \
+    Microsoft.Hpc.Diagnostics.Helpers.dll          \
+    HpcDiagnostics.exe                             \
+    HpcDiags.exe                                   \
+    HpcDiagnosticHost.exe                          \
+    DbConStrValidator.exe                          \
+    UpgradeHelper.exe                              \
+    Netwrench.exe                                  \
+    NetTSAdapter.dll                               \
+    NetTroubleshoot.exe                            \
+    Microsoft.Hpc.AzureMetrics.dll                 \
+    Microsoft.Hpc.AzureDiagnosticService.dll       \
+    HpcMonitoringClient.exe                        \
+    HpcMonitoringServer.exe                        \
+    HpcMonUtil.exe                                 \
+    Microsoft.Hpc.MonitoringInterface.dll          \
+    Microsoft.Hpc.Trace.dll                        \    
+    Microsoft.Hpc.Win32PdhHelper.dll               \
+    LogParserManaged.exe                           \
+    Microsoft.Hpc.Supportability.HpcBlobLogs.dll   \
+    HPCAzureLog.exe                                \
+    Microsoft.Hpc.AzureMetrics.IaaSClusterDataCollector.dll    \
+    HpcIaaSClusterUsageService.exe                 \
+    GangliaWinHPCIntegration.exe                   \
+
+#!SIGN
+#!PATH=amd64\retail\bin
+#!PATH=i386\retail\bin
+GUIAPPFILES = \
+    CcpConsole.exe                                 \
+    HpcClusterManager.exe                          \
+    HpcJobManager.exe                              \
+    ClusterRemoteConsole.exe                       \
+    HpcSetupChainer.exe                            \
+
+#!SN
+#!PATH=amd64\retail\bin
+#!PATH=i386\retail\bin
+STRONGNAMEEXCELFILES = \
+    Microsoft.Hpc.Excel.dll                        \
+    Microsoft.Hpc.Excel.Internal.dll               \
+    Microsoft.Hpc.Excel.XllConnector.dll           \
+
+MANAGEDEXCELFILES = \
+    Microsoft.Hpc.Excel.ExcelService.dll           \
+    Microsoft.Hpc.Excel.XllContainer.dll           \
+    HpcExcelDiagnosticHost.exe                     \
+
+#!SN
+#!PATH=amd64\retail\bin\ja-jp\HPC\locstudio.target\managed\bin
+#!PATH=amd64\retail\bin\zh-cn\HPC\locstudio.target\managed\bin
+#!PATH=i386\retail\bin\ja-jp\HPC\locstudio.target\managed\bin
+#!PATH=i386\retail\bin\zh-cn\HPC\locstudio.target\managed\bin
+STRONGNAMELOCFILES = \
+    Microsoft.Hpc.Scheduler.Properties.resources.dll    \
+    Microsoft.Hpc.Scheduler.Store.resources.dll         \
+    Microsoft.Hpc.Scheduler.resources.dll               \
+    Microsoft.Hpc.Excel.resources.dll                   \
+
+#!SN
+#!PATH=amd64\retail\bin\en
+#!PATH=i386\retail\bin\en
+STRONGNAMEENFILES = \
+    Microsoft.Hpc.Diagnostics.Helpers.resources.dll     \
+
+#!SIGN
+#!PATH=amd64\retail\bin
+#!PATH=i386\retail\bin
+NATIVEFILES = \
+    CcpWdsProvider.dll \
+    ExecutionClient.exe \
+    Hpcutil.exe \
+    msmpisvc.exe \
+    HpcNmRpc.dll \
+    Hpcksp.dll \
+    Microsoft.Hpc.Scheduler.SoftCardLogonNative.dll \
+
+#!SIGN
+#!PATH=amd64\retail\bin
+#!PATH=i386\retail\bin
+POWERSHELLFILES = \
+    ccppsh.format.ps1xml \
+    ccppsh.Azure.format.ps1xml \
+    DeleteNode.ps1 \
+    ExportData.ps1 \
+    ImportData.ps1 \
+    Export-HpcConfiguration.ps1 \
+    Import-HpcConfiguration.ps1 \
+    New-HpcCert.ps1 \
+    Set-HPCWebComponents.ps1 \
+    Move-HpcNode.ps1 \
+    Set-HpcClusterName.ps1 \
+    Update-HpcAzureEndpoint.ps1 \
+
+#!SIGN
+#!PATH=i386\retail\bin
+X86ONLYFILES = \
+    setup.exe \
+
+#!SIGN
+#!PATH=release\setup
+HPCSERVERMSIFILES = \
+    HpcServer_x64.msi \
+    HpcServer_x86.msi \
+    
+#!SIGN
+#!PATH=oob
+HPCAZUREDIAGNOSTICSTOOLFILES = \
+    HpcAzureDiagnosticsTool.exe \   
+
+#!SIGN
+#!PATH=sdk
+SDKMSIFILES = \
+    sdk_x64.msi \
+    sdk_x86.msi \
+
+#!SIGN
+#!PATH=IScsiPartnerPack
+PARTNERFILES = \
+    HpcIScsiPartnerPack.msi \
+
+#!SIGN
+#!PATH=IScsiProviders
+PROVIDERFILES = \
+    hpc_netapp_provider.msi \
+    hpc_wintarget_provider.msi \
+
+#!SIGN
+#!PATH=release\setup
+HPCEXCELPACKMSIFILES = \
+    HPCExcelPack_x64.msi \
+    HPCExcelPack_x86.msi \
+
+#!SIGN
+#!PATH=HpcClient
+HPCCLIENTMSIFILES = \
+    HpcClient_x64.msi \
+    HpcClient_x86.msi \
+
+##!SIGN
+##!PATH=release\setup
+#AZUREVMMSIFILES = \
+#    HpcAzureVM.msi \
+
+#!SIGN
+#!PATH=release\setup
+HPCKSPMSI = \
+    HpcKsp_x64.msi \
+    HpcKsp_x86.msi \
+
+#!SIGN
+#!PATH=release\setup
+WEBPARTMSIFILES = \
+    HpcWebComponents.msi \
+	
+#!SIGN
+#!PATH=toolpack
+GANGLIAMSIFILES = \
+    ganglia_x64.msi \
+
+#!SIGN
+#!PATH=amd64\retail\bin
+WEBPARTMANAGEDFILES = \
+    HpcWebService.exe \
+    Microsoft.Hpc.WebService.Common.dll \
+    Microsoft.Hpc.WebService.Scheduler.dll \
+    Microsoft.Hpc.Web.Portal.dll \
+    Microsoft.Hpc.Portal.AzureFileStorageMgmt.dll \
+    Microsoft.Hpc.Portal.PortalStorage.dll \
+    Microsoft.Hpc.Portal.AspProviders.dll \
+
+##!SIGN
+##!PATH=toolpack
+CLUSNETMSI = \
+    NetTroubleshoot.msi \
+
+##!SIGN
+##!PATH=toolpack
+SOADEBUGGERVSIX = \
+    SoaDebugger.vsix \
+
+#!SIGN
+#!PATH=i386\retail\bin
+SKUTOOLFILES = \
+    VMConfigUpdate.exe   \
+
+#!SIGN
+#!PATH=oob
+IAASUSAGESERVICEMSI = \
+    HpcIaaSUsageService.Msi   \
+    
+#!SIGN
+#!PATH=i386\retail\bin
+IAASCLUSTERFILES = \
+    New-HPCIaaSCluster.ps1 \
+    HPCIaaSClusterUtils.ps1 \
+    HPCIaaSClusterLib.ps1 \
+    OutputFramework.ps1 \
+    HPCHNPrepare.ps1 \
+    IaaSAzureCmdLib.ps1 \
+    HPCIaaSClusterConfigLib.ps1 \
+    HPCIaaSNodeMgmtUtil.ps1 \
+    AzureRdfeUtil.ps1 \
+    Add-HPCIaaSNode.ps1 \
+    Remove-HPCIaaSNode.ps1 \
+    Start-HPCIaaSNode.ps1 \
+    Stop-HPCIaaSNode.ps1 \
+    Get-HPCIaaSNodeState.ps1 \
+    AzureAutoGrowShrink.ps1 \
+    Remove-HPCIaaSCluster.ps1 \
+    Get-HPCPatchStatus.ps1 \
+
+#!SIGN
+#!PATH=amd64\retail\bin
+LINUXCOMMUNICATORFILES = \
+    Microsoft.Hpc.Communicators.LinuxCommunicator.dll   \
+
+#Do not leave blank line at the end

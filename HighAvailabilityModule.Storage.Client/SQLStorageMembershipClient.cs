@@ -96,6 +96,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Guid.Parse(value);
             }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not Guid.");
@@ -111,6 +115,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.String")
             {
                 return value;
+            }
+            else if(type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
             }
             else
             {
@@ -128,6 +136,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Int32.Parse(value); 
             }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not int.");
@@ -143,6 +155,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.Int64")
             {
                 return Int64.Parse(value);
+            }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
             }
             else
             {
@@ -160,6 +176,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Double.Parse(value);
             }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not double.");
@@ -175,6 +195,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.String[]")
             {
                 return value.Split(",".ToCharArray());
+            }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
             }
             else
             {
@@ -197,6 +221,10 @@ namespace HighAvailabilityModule.Storage.Client
                     valueByte[i] = byte.Parse(s[i]);
                 }
                 return valueByte;
+            }
+            else if (type == string.Empty)
+            {
+                throw new InvalidOperationException("Get empty value.");
             }
             else
             {

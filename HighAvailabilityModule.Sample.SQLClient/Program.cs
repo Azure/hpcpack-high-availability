@@ -15,6 +15,7 @@ namespace HighAvailabilityModule.Sample.SQLClient
             string utype;
             string uname;
             string conStr;
+            string affiliatedType = string.Empty;
 
             ArrayList AllType = new ArrayList();
 
@@ -24,6 +25,7 @@ namespace HighAvailabilityModule.Sample.SQLClient
                 if (utype == "query")
                 {
                     uname = "-1";
+                    affiliatedType = "";
                     for (int i = 2; i < args.Length; i++)
                     {
                         AllType.Add(args[i]);
@@ -34,6 +36,10 @@ namespace HighAvailabilityModule.Sample.SQLClient
                 {
                     uname = args[2];
                     conStr = args[3];
+                    if (args.Length == 5)
+                    {
+                        affiliatedType = args[4];
+                    }
                 }
             }
             else
@@ -46,7 +52,7 @@ namespace HighAvailabilityModule.Sample.SQLClient
             var timeout = TimeSpan.FromSeconds(5);
 
             SQLMembershipClient client = new SQLMembershipClient(utype, uname, interval, conStr);
-            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout);
+            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout, affiliatedType);
 
             Console.WriteLine("Uuid:{0}", client.Uuid);
             Console.WriteLine("Type:{0}", client.Utype);

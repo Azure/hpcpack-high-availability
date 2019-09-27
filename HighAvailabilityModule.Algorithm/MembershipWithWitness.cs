@@ -31,7 +31,11 @@ namespace HighAvailabilityModule.Algorithm
 
         internal CancellationToken AlgorithmCancellationToken => this.AlgorithmCancellationTokenSource.Token;
 
-        public MembershipWithWitness(IMembershipClient client, TimeSpan heartBeatInterval, TimeSpan heartBeatTimeout)
+        private string AffiliatedType;
+
+        private (HeartBeatEntry Entry, DateTime QueryTime) lastSeenAffiliated;
+
+        public MembershipWithWitness(IMembershipClient client, TimeSpan heartBeatInterval, TimeSpan heartBeatTimeout, string affiliatedType)
         {
             this.Client = client;
             this.Client.OperationTimeout = heartBeatInterval;
@@ -40,6 +44,7 @@ namespace HighAvailabilityModule.Algorithm
             this.Uname = client.Uname;
             this.HeartBeatInterval = heartBeatInterval;
             this.HeartBeatTimeout = heartBeatTimeout;
+            this.AffiliatedType = affiliatedType;
         }
 
         public async Task RunAsync(Func<Task> onStartAsync, Func<Task> onErrorAsync)
@@ -77,13 +82,14 @@ namespace HighAvailabilityModule.Algorithm
         internal async Task GetPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (!this.RunningAsPrimary(DateTime.UtcNow))
+            while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffiliatedASPrimary())
             {
                 token.ThrowIfCancellationRequested();
                 await Task.Delay(this.HeartBeatInterval, token);
                 await this.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
+                await this.CheckAffiliatedAsync(DateTime.UtcNow).ConfigureAwait(false);
 
-                if (!this.PrimaryUp)
+                if (!this.PrimaryUp && this.AffiliatedASPrimary())
                 {
                     Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Primary down");
                     await this.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
@@ -106,7 +112,6 @@ namespace HighAvailabilityModule.Algorithm
                         }
                     }
                 }
-
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] lastSeenHeartBeat = {this.lastSeenHeartBeat.Entry.Uuid}, Client Type: {this.Utype}, {this.lastSeenHeartBeat.Entry.TimeStamp:O}");
             }
             catch (Exception ex)
@@ -129,7 +134,6 @@ namespace HighAvailabilityModule.Algorithm
                 Trace.TraceInformation($"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.lastSeenHeartBeat.Entry.Uuid}, {this.lastSeenHeartBeat.Entry.TimeStamp:O}, Client Type: {this.Utype}");
                 await this.Client.HeartBeatAsync(new HeartBeatEntryDTO (this.Uuid, this.Utype, this.Uname, this.lastSeenHeartBeat.Entry));
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}");
-
             }
             catch (Exception ex)
             {
@@ -143,20 +147,22 @@ namespace HighAvailabilityModule.Algorithm
         internal async Task KeepPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (this.RunningAsPrimary(DateTime.UtcNow))
+            while (this.RunningAsPrimary(DateTime.UtcNow) && AffiliatedASPrimary())
             {
                 token.ThrowIfCancellationRequested();
 #pragma warning disable 4014
                 this.HeartBeatAsPrimaryAsync();
                 this.CheckPrimaryAsync(DateTime.UtcNow);
+                this.CheckAffiliatedAsync(DateTime.UtcNow);
 #pragma warning restore 4014
                 await Task.Delay(this.HeartBeatInterval, token).ConfigureAwait(false);
             }
-
             Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Lost Primary");
         }
 
         private bool PrimaryUp => this.lastSeenHeartBeat != default && !this.lastSeenHeartBeat.Entry.IsEmpty;
+
+        private bool AffiliatedPrimaryUp => this.lastSeenAffiliated != default && !this.lastSeenAffiliated.Entry.IsEmpty;
 
         internal bool RunningAsPrimary(DateTime now)
         {
@@ -165,8 +171,40 @@ namespace HighAvailabilityModule.Algorithm
             {
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Running as secondary {this.Dump()}.");
             }
-
             return primary;
+        }
+
+        internal bool AffiliatedASPrimary()
+        {
+            var affiliatedPrimary = this.AffiliatedType == string.Empty || (this.AffiliatedPrimaryUp && this.lastSeenAffiliated.Entry.Uname.ToLower() == this.Uname.ToLower());
+            if (!affiliatedPrimary)
+            {
+                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Affiliated service is running on another machine. {this.Dump()}.");
+            }
+            return affiliatedPrimary;
+        }
+
+        internal async Task CheckAffiliatedAsync(DateTime now)
+        {
+            try
+            {
+                var affiliated = await this.Client.GetHeartBeatEntryAsync(this.AffiliatedType);
+                if (now > this.lastSeenAffiliated.QueryTime)
+                {
+                    lock (this.heartbeatLock)
+                    {
+                        if (now > this.lastSeenAffiliated.QueryTime)
+                        {
+                            this.lastSeenAffiliated = (affiliated, now);
+                        }
+                    }
+                }
+                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] lastSeenAffiliated = {this.lastSeenAffiliated.Entry.Uuid}, Client Type: {this.Utype}, {this.lastSeenAffiliated.Entry.TimeStamp:O}");
+            }
+            catch (Exception ex)
+            {
+                Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Error occured when getting affiliated entry: {ex.ToString()}, Client Type: {this.Utype}");
+            } 
         }
 
         public string Dump() => $"PrimaryUp = {this.PrimaryUp}, SelfUuid = {this.Uuid ?? string.Empty}, LastSeenUuid = {this.lastSeenHeartBeat.Entry?.Uuid ?? string.Empty}, LastSeenQueryTime = {this.lastSeenHeartBeat.QueryTime:O}, Client Type: {this.Utype}";

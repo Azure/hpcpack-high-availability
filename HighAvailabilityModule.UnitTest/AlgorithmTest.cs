@@ -33,6 +33,8 @@ namespace HighAvailabilityModule.UnitTest
         private static string ClientUname1 => "1";
         private static string ClientUname2 => "2";
 
+        private static string AffiliatedType => "A";
+
         private InMemoryMembershipServer server;
 
         private InMemoryMembershipClient client;
@@ -48,13 +50,13 @@ namespace HighAvailabilityModule.UnitTest
         {
             this.server = new InMemoryMembershipServer(Timeout);
             this.client = new InMemoryMembershipClient(this.server, Client1Uuid, ClientUtypeA, ClientUname1);
-            this.algo = new MembershipWithWitness(this.client, Interval, Timeout);
+            this.algo = new MembershipWithWitness(this.client, Interval, Timeout, string.Empty);
 
             this.client2 = new InMemoryMembershipClient(this.server, Client2Uuid, ClientUtypeA, ClientUname2);
-            this.algo2 = new MembershipWithWitness(this.client2, Interval, Timeout);
+            this.algo2 = new MembershipWithWitness(this.client2, Interval, Timeout, string.Empty);
 
             this.client3 = new InMemoryMembershipClient(this.server, Client3Uuid, ClientUtypeB, ClientUname1);
-            this.algo3 = new MembershipWithWitness(this.client3, Interval, Timeout);
+            this.algo3 = new MembershipWithWitness(this.client3, Interval, Timeout, AffiliatedType);
         }
 
         [TestMethod]
@@ -114,7 +116,7 @@ namespace HighAvailabilityModule.UnitTest
         public async Task RunningAsPrimaryTest7()
         {
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA,ClientUname1, Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
             Assert.IsFalse(this.algo.RunningAsPrimary(Now));
         }
 
@@ -122,9 +124,43 @@ namespace HighAvailabilityModule.UnitTest
         public async Task RunningAsPrimaryTest8()
         {
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA,ClientUname1, Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
             await this.algo3.CheckPrimaryAsync(Now);
             Assert.IsFalse(this.algo3.RunningAsPrimary(Now));
+        }
+
+        [TestMethod]
+        public async Task AffiliatedAsPrimary1()
+        {
+            this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
+            await this.algo.CheckAffiliatedAsync(Now);
+            Assert.IsTrue(this.algo.AffiliatedASPrimary());
+        }
+
+        [TestMethod]
+        public async Task AffiliatedAsPrimary2()
+        {
+            this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
+            await this.algo3.CheckAffiliatedAsync(Now);
+            Assert.IsFalse(this.algo3.AffiliatedASPrimary());
+        }
+
+        [TestMethod]
+        public async Task AffiliatedAsPrimary3()
+        {
+            this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
+            await this.algo3.CheckAffiliatedAsync(Now);
+            Assert.IsTrue(this.algo3.AffiliatedASPrimary());
+        }
+
+        [TestMethod]
+        public async Task AffiliatedAsPrimary4()
+        {
+            this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client2Uuid, ClientUtypeA, ClientUname2, Now));
+            await this.algo3.CheckAffiliatedAsync(Now);
+            Assert.IsFalse(this.algo3.AffiliatedASPrimary());
         }
 
         [TestMethod]

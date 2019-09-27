@@ -147,3 +147,13 @@ AS
 	ELSE
 		SELECT TOP 1 uuid, utype, uname, timeStamp FROM dbo.HeartBeatTable WHERE utype=@utype;
 GO
+
+IF OBJECT_ID('GetParameter') IS NOT NULL
+	DROP PROCEDURE GetParameter;
+GO
+CREATE PROCEDURE GetParameter
+	@parameterName nvarchar(50)
+AS
+	SET NOCOUNT ON
+	EXEC ('SELECT TOP 1 ' +@parameterName +' FROM dbo.ParameterTable')
+GO
