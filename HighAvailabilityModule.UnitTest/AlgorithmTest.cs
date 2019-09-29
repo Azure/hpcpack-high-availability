@@ -31,7 +31,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         private static string ClientUname1 => "1";
         private static string ClientUname2 => "2";
 
-        private static string AffiliatedType => "A";
+        private static string AffinityType => "A";
 
         private InMemoryMembershipServer server;
 
@@ -54,7 +54,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             this.algo2 = new MembershipWithWitness(this.client2, Interval, Timeout, string.Empty);
 
             this.client3 = new InMemoryMembershipClient(this.server, Client3Uuid, ClientUtypeB, ClientUname1);
-            this.algo3 = new MembershipWithWitness(this.client3, Interval, Timeout, AffiliatedType);
+            this.algo3 = new MembershipWithWitness(this.client3, Interval, Timeout, AffinityType);
         }
 
         [TestMethod]
@@ -135,51 +135,59 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         }
 
         [TestMethod]
-        public async Task AffiliatedAsPrimary1()
+        public async Task AffinityAsPrimary1()
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo.CheckAffiliatedAsync(now);
-            Assert.IsTrue(this.algo.AffiliatedASPrimary(now));
+            await this.algo.CheckAffinityAsync(now);
+            Assert.IsTrue(this.algo.AffinityAsPrimary(now));
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
-        public async Task AffiliatedAsPrimary2()
+        public async Task AffinityAsPrimary2()
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo3.CheckAffiliatedAsync(now);
-            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
+            await this.algo3.CheckAffinityAsync(now);
+            Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
-        public async Task AffiliatedAsPrimary3()
+        public async Task AffinityAsPrimary3()
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo3.CheckAffiliatedAsync(now);
-            Assert.IsTrue(this.algo3.AffiliatedASPrimary(now));
+            await this.algo.CheckPrimaryAsync(now);
+            await this.algo3.CheckAffinityAsync(now);
+            Assert.IsTrue(this.algo3.AffinityAsPrimary(now));
+            Assert.IsTrue(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
-        public async Task AffiliatedAsPrimary4()
+        public async Task AffinityAsPrimary4()
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client2Uuid, ClientUtypeA, ClientUname2, now));
-            await this.algo3.CheckAffiliatedAsync(now);
-            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
+            await this.algo2.CheckPrimaryAsync(now);
+            await this.algo3.CheckAffinityAsync(now);
+            Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
+            Assert.IsTrue(this.algo2.RunningAsPrimary(now));
         }
 
         [TestMethod]
-        public async Task AffiliatedAsPrimary5()
+        public async Task AffinityAsPrimary5()
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo3.CheckAffiliatedAsync(now - Timeout);
-            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
+            await this.algo.CheckPrimaryAsync(now - Timeout);
+            await this.algo3.CheckAffinityAsync(now - Timeout);
+            Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]

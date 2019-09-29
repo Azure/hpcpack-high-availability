@@ -3,6 +3,7 @@
 namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
@@ -23,19 +24,22 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         private TimeSpan HeartBeatTimeout { get; }
 
-        private (HeartBeatEntry Entry, DateTime QueryTime) lastSeenHeartBeat;
-
         private readonly object heartbeatLock = new object();
 
         private CancellationTokenSource AlgorithmCancellationTokenSource { get; } = new CancellationTokenSource();
 
         internal CancellationToken AlgorithmCancellationToken => this.AlgorithmCancellationTokenSource.Token;
 
-        private string AffiliatedType;
+        private string AffinityType;
 
-        private (HeartBeatEntry Entry, DateTime QueryTime) lastSeenAffiliated;
+        private const string LastSeenHeartBeatString = "LastSeenHeartBeat";
 
-        public MembershipWithWitness(IMembershipClient client, TimeSpan heartBeatInterval, TimeSpan heartBeatTimeout, string affiliatedType)
+        private const string lastSeenAffinityString = "lastSeenAffinity";
+
+        private Dictionary<string, (HeartBeatEntry Entry, DateTime QueryTime)> lastSeenHeartBeatDict 
+            = new Dictionary<string, (HeartBeatEntry Entry, DateTime QueryTime)> { { LastSeenHeartBeatString, (null, default(DateTime))}, { lastSeenAffinityString, (null, default(DateTime)) } };
+
+        public MembershipWithWitness(IMembershipClient client, TimeSpan heartBeatInterval, TimeSpan heartBeatTimeout, string AffinityType)
         {
             this.Client = client;
             this.Client.OperationTimeout = heartBeatInterval;
@@ -44,7 +48,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
             this.Uname = client.Uname;
             this.HeartBeatInterval = heartBeatInterval;
             this.HeartBeatTimeout = heartBeatTimeout;
-            this.AffiliatedType = affiliatedType;
+            this.AffinityType = AffinityType;
         }
 
         public async Task RunAsync(Func<Task> onStartAsync, Func<Task> onErrorAsync)
@@ -82,14 +86,14 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
         internal async Task GetPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffiliatedASPrimary(DateTime.UtcNow))
+            while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffinityAsPrimary(DateTime.UtcNow))
             {
                 token.ThrowIfCancellationRequested();
                 await Task.Delay(this.HeartBeatInterval, token);
                 await this.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
-                await this.CheckAffiliatedAsync(DateTime.UtcNow).ConfigureAwait(false);
+                await this.CheckAffinityAsync(DateTime.UtcNow).ConfigureAwait(false);
 
-                if (!this.PrimaryUp && this.AffiliatedASPrimary(DateTime.UtcNow))
+                if (!this.PrimaryUp && this.AffinityAsPrimary(DateTime.UtcNow))
                 {
                     Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Primary down");
                     await this.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
@@ -99,30 +103,35 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         internal async Task CheckPrimaryAsync(DateTime now)
         {
+            await CheckPrimaryAuxAsync(now, this.Utype, LastSeenHeartBeatString);
+        }
+
+        private async Task CheckPrimaryAuxAsync(DateTime now, string qtype, string name)
+        {
             try
             {
-                var entry = await this.Client.GetHeartBeatEntryAsync(this.Utype);
-                if (now > this.lastSeenHeartBeat.QueryTime)
+                var entry = await this.Client.GetHeartBeatEntryAsync(qtype);
+                if (now > this.lastSeenHeartBeatDict[name].QueryTime)
                 {
                     lock (this.heartbeatLock)
                     {
-                        if (now > this.lastSeenHeartBeat.QueryTime)
+                        if (now > this.lastSeenHeartBeatDict[name].QueryTime)
                         {
-                            this.lastSeenHeartBeat = (entry, now);
+                            this.lastSeenHeartBeatDict[name] = (entry, now);
                         }
                     }
                 }
-                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] lastSeenHeartBeat = {this.lastSeenHeartBeat.Entry.Uuid}, Client Type: {this.Utype}, {this.lastSeenHeartBeat.Entry.TimeStamp:O}");
+                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] {name} = {this.lastSeenHeartBeatDict[name].Entry.Uuid}, Client Type: {qtype}, {this.lastSeenHeartBeatDict[name].Entry.TimeStamp:O}");
             }
             catch (Exception ex)
             {
-                Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Error occured when getting heartbeat entry: {ex.ToString()}, Client Type: {this.Utype}");
+                Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] {name} Error occured when getting heartbeat entry: {ex.ToString()}, Client Type: {qtype}");
             }
         }
 
         internal async Task HeartBeatAsPrimaryAsync()
         {
-            if (this.lastSeenHeartBeat.Entry == null)
+            if (this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry == null)
             {
                 Trace.TraceWarning($"[Protocol][{this.Uuid}] Can't send heartbeat before querying current primary.");
                 throw new InvalidOperationException($"[Protocol][{this.Uuid}] Can't send heartbeat before querying current primary.");
@@ -131,8 +140,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
             try
             {
                 var sendTime = DateTime.UtcNow;
-                Trace.TraceInformation($"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.lastSeenHeartBeat.Entry.Uuid}, {this.lastSeenHeartBeat.Entry.TimeStamp:O}, Client Type: {this.Utype}");
-                await this.Client.HeartBeatAsync(new HeartBeatEntryDTO (this.Uuid, this.Utype, this.Uname, this.lastSeenHeartBeat.Entry));
+                Trace.TraceInformation($"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.Uuid}, {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.TimeStamp:O}, Client Type: {this.Utype}");
+                await this.Client.HeartBeatAsync(new HeartBeatEntryDTO (this.Uuid, this.Utype, this.Uname, this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry));
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}");
             }
             catch (Exception ex)
@@ -147,26 +156,26 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
         internal async Task KeepPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (this.RunningAsPrimary(DateTime.UtcNow) && AffiliatedASPrimary(DateTime.UtcNow))
+            while (this.RunningAsPrimary(DateTime.UtcNow) && AffinityAsPrimary(DateTime.UtcNow))
             {
                 token.ThrowIfCancellationRequested();
 #pragma warning disable 4014
                 this.HeartBeatAsPrimaryAsync();
                 this.CheckPrimaryAsync(DateTime.UtcNow);
-                this.CheckAffiliatedAsync(DateTime.UtcNow);
+                this.CheckAffinityAsync(DateTime.UtcNow);
 #pragma warning restore 4014
                 await Task.Delay(this.HeartBeatInterval, token).ConfigureAwait(false);
             }
             Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Lost Primary");
         }
 
-        private bool PrimaryUp => this.lastSeenHeartBeat != default && !this.lastSeenHeartBeat.Entry.IsEmpty;
+        private bool PrimaryUp => this.lastSeenHeartBeatDict[LastSeenHeartBeatString] != default && !this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.IsEmpty;
 
-        private bool AffiliatedPrimaryUp => this.lastSeenAffiliated != default && !this.lastSeenAffiliated.Entry.IsEmpty;
+        private bool AffinityPrimaryUp => this.lastSeenHeartBeatDict[lastSeenAffinityString] != default && !this.lastSeenHeartBeatDict[lastSeenAffinityString].Entry.IsEmpty;
 
         internal bool RunningAsPrimary(DateTime now)
         {
-            var primary = this.PrimaryUp && this.lastSeenHeartBeat.Entry.Uuid == this.Uuid && now - this.lastSeenHeartBeat.QueryTime < (this.HeartBeatTimeout - this.HeartBeatInterval);
+            var primary = this.PrimaryUp && this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.Uuid == this.Uuid && now - this.lastSeenHeartBeatDict[LastSeenHeartBeatString].QueryTime < (this.HeartBeatTimeout - this.HeartBeatInterval);
             if (!primary)
             {
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Running as secondary {this.Dump()}.");
@@ -174,39 +183,21 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
             return primary;
         }
 
-        internal bool AffiliatedASPrimary(DateTime now)
+        internal bool AffinityAsPrimary(DateTime now)
         {
-            var affiliatedPrimary = this.AffiliatedType == string.Empty || (this.AffiliatedPrimaryUp && this.lastSeenAffiliated.Entry.Uname.ToLower() == this.Uname.ToLower() && now - this.lastSeenAffiliated.QueryTime < (this.HeartBeatTimeout - this.HeartBeatInterval));
-            if (!affiliatedPrimary)
+            var AffinityPrimary = this.AffinityType == string.Empty || (this.AffinityPrimaryUp && this.lastSeenHeartBeatDict[lastSeenAffinityString].Entry.Uname.ToLower() == this.Uname.ToLower() && now - this.lastSeenHeartBeatDict[lastSeenAffinityString].QueryTime < (this.HeartBeatTimeout - this.HeartBeatInterval));
+            if (!AffinityPrimary)
             {
-                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Affiliated service is running on another machine. {this.Dump()}.");
+                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Affinity service is running on another machine. {this.Dump()}.");
             }
-            return affiliatedPrimary;
+            return AffinityPrimary;
         }
 
-        internal async Task CheckAffiliatedAsync(DateTime now)
+        internal async Task CheckAffinityAsync(DateTime now)
         {
-            try
-            {
-                var affiliated = await this.Client.GetHeartBeatEntryAsync(this.AffiliatedType);
-                if (now > this.lastSeenAffiliated.QueryTime)
-                {
-                    lock (this.heartbeatLock)
-                    {
-                        if (now > this.lastSeenAffiliated.QueryTime)
-                        {
-                            this.lastSeenAffiliated = (affiliated, now);
-                        }
-                    }
-                }
-                Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] lastSeenAffiliated = {this.lastSeenAffiliated.Entry.Uuid}, Client Type: {this.Utype}, {this.lastSeenAffiliated.Entry.TimeStamp:O}");
-            }
-            catch (Exception ex)
-            {
-                Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Error occured when getting affiliated entry: {ex.ToString()}, Client Type: {this.Utype}");
-            } 
+            await CheckPrimaryAuxAsync(now, this.AffinityType, lastSeenAffinityString);
         }
 
-        public string Dump() => $"PrimaryUp = {this.PrimaryUp}, SelfUuid = {this.Uuid ?? string.Empty}, LastSeenUuid = {this.lastSeenHeartBeat.Entry?.Uuid ?? string.Empty}, LastSeenQueryTime = {this.lastSeenHeartBeat.QueryTime:O}, Client Type: {this.Utype}";
+        public string Dump() => $"PrimaryUp = {this.PrimaryUp}, SelfUuid = {this.Uuid ?? string.Empty}, LastSeenUuid = {this.lastSeenHeartBeatDict[lastSeenAffinityString].Entry?.Uuid ?? string.Empty}, LastSeenQueryTime = {this.lastSeenHeartBeatDict[lastSeenAffinityString].QueryTime:O}, Client Type: {this.Utype}";
     }
 }

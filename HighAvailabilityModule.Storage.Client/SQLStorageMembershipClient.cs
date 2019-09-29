@@ -98,7 +98,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -118,7 +118,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if(type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -138,7 +138,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -158,7 +158,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -178,7 +178,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -198,7 +198,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -224,7 +224,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == string.Empty)
             {
-                throw new InvalidOperationException("Get empty value.");
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -456,6 +456,19 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
                 || lastSeenType != type
                 || (lastSeenValue == string.Empty && value != string.Empty)
                 || (lastSeenType == string.Empty && type != string.Empty);
+        }
+
+        class EmptyValueException : ApplicationException
+        {
+            public EmptyValueException(string message) : base(message) { }
+
+            public override string Message
+            {
+                get
+                {
+                    return base.Message;
+                }
+            }
         }
     }
 }

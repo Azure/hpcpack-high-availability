@@ -14,7 +14,7 @@ GO
 CREATE TABLE ParameterTable
 (heartbeatTimeOut int);
 INSERT INTO dbo.ParameterTable (heartbeatTimeOut)
-VALUES(1000);
+VALUES(5000);
 GO
 
 IF OBJECT_ID('HeartBeatInvalid') IS NOT NULL
