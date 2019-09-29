@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Storage.Client
+namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace HighAvailabilityModule.Storage.Client
     using System.Data.SqlClient;
     using System.Diagnostics;
 
-    using HighAvailabilityModule.Interface;
-    using HighAvailabilityModule.Util.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Util.SQL;
 
     public class SQLStorageMembershipClient : IMembershipStorageClient
     {

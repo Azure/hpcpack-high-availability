@@ -1,8 +1,10 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
 	<DebugType>full</DebugType>
+	<AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Client.InMemory</AssemblyName>
+	<RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Client.InMemory</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.UnitTest
+namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
 {
     using System.Collections.Generic;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 

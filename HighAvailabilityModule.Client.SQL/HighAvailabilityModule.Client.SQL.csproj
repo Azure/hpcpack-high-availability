@@ -9,6 +9,8 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Client.SQL</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Client.SQL</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

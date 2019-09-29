@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailablityModule.Storage.Sample.Client
+namespace Microsoft.Hpc.HighAvailablityModule.Storage.Sample.Client
 {
     using System;
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Storage.Client;
+    using Microsoft.Hpc.HighAvailabilityModule.Storage.Client;
     class Program
     {
         static async Task Main(string[] args)

@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Algorithm
+namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 {
     using System;
     using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class MembershipWithWitness
     {
@@ -82,14 +82,14 @@ namespace HighAvailabilityModule.Algorithm
         internal async Task GetPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffiliatedASPrimary())
+            while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffiliatedASPrimary(DateTime.UtcNow))
             {
                 token.ThrowIfCancellationRequested();
                 await Task.Delay(this.HeartBeatInterval, token);
                 await this.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
                 await this.CheckAffiliatedAsync(DateTime.UtcNow).ConfigureAwait(false);
 
-                if (!this.PrimaryUp && this.AffiliatedASPrimary())
+                if (!this.PrimaryUp && this.AffiliatedASPrimary(DateTime.UtcNow))
                 {
                     Trace.TraceWarning($"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Primary down");
                     await this.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
@@ -147,7 +147,7 @@ namespace HighAvailabilityModule.Algorithm
         internal async Task KeepPrimaryAsync()
         {
             var token = this.AlgorithmCancellationToken;
-            while (this.RunningAsPrimary(DateTime.UtcNow) && AffiliatedASPrimary())
+            while (this.RunningAsPrimary(DateTime.UtcNow) && AffiliatedASPrimary(DateTime.UtcNow))
             {
                 token.ThrowIfCancellationRequested();
 #pragma warning disable 4014
@@ -174,9 +174,9 @@ namespace HighAvailabilityModule.Algorithm
             return primary;
         }
 
-        internal bool AffiliatedASPrimary()
+        internal bool AffiliatedASPrimary(DateTime now)
         {
-            var affiliatedPrimary = this.AffiliatedType == string.Empty || (this.AffiliatedPrimaryUp && this.lastSeenAffiliated.Entry.Uname.ToLower() == this.Uname.ToLower());
+            var affiliatedPrimary = this.AffiliatedType == string.Empty || (this.AffiliatedPrimaryUp && this.lastSeenAffiliated.Entry.Uname.ToLower() == this.Uname.ToLower() && now - this.lastSeenAffiliated.QueryTime < (this.HeartBeatTimeout - this.HeartBeatInterval));
             if (!affiliatedPrimary)
             {
                 Trace.TraceInformation($"[{DateTime.UtcNow:O}][Protocol] Affiliated service is running on another machine. {this.Dump()}.");

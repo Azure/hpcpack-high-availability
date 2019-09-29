@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Sample.SQLClient
+namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
 {
     using System;
     using System.Collections;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Client.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.SQL;
     class Program
     {
         static async Task Main(string[] args)

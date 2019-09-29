@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.E2ETest.TestCases.Infrastructure
+namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
 {
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class AlgorithmContainer
     {

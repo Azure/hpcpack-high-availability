@@ -13,9 +13,9 @@
 #pragma warning disable 1573 // Disable "CS1573 Parameter '...' has no matching param tag in the XML comment for ...
 #pragma warning disable 1591 // Disable "CS1591 Missing XML comment for publicly visible type or member ..."
 
-namespace HighAvailabilityModule.Client.Rest
+namespace Microsoft.Hpc.HighAvailabilityModule.Client.Rest
 {
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.0.2.0 (NJsonSchema v10.0.20.0 (Newtonsoft.Json v11.0.0.0))")]
     internal partial class RestClientImpl
     {

@@ -5,7 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography.X509Certificates;
 
-[assembly: InternalsVisibleTo("HighAvailabilityModule.UnitTest, "
+[assembly: InternalsVisibleTo("Microsoft.Hpc.HighAvailabilityModule.UnitTest, "
     +"PublicKey = 002400000480000094000000060200000024000052534131"
     +"0004000001000100b5fc90e7027f67871e773a8fde8938c81dd402ba65b9"
     +"201d60593e96c492651e889cc13f1415ebb53fac1131ae0bd333c5ee6021"

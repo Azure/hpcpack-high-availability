@@ -1,16 +1,16 @@
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.UnitTest
+namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
 {
     using System;
     using System.Threading.Tasks;
     using System.Collections.Generic;
     using System.Diagnostics;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Client.InMemory;
-    using HighAvailabilityModule.Interface;
-    using HighAvailabilityModule.Server.InMemory;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.InMemory;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Server.InMemory;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -20,8 +20,6 @@ namespace HighAvailabilityModule.UnitTest
         private static TimeSpan Timeout => TimeSpan.FromSeconds(1.5);
 
         private static TimeSpan Interval => TimeSpan.FromSeconds(0.5);
-
-        private static DateTime Now { get; } = DateTime.Parse("2019-09-27T12:00:00.2965246Z");
 
         private static string Client1Uuid => "cdca5b45-6ea1-4d91-81f6-d39f4821e791";
         private static string Client2Uuid => "39a78df0-e101-49b9-8c56-ec2fea2e47df";
@@ -62,25 +60,28 @@ namespace HighAvailabilityModule.UnitTest
         [TestMethod]
         public async Task RunningAsPrimaryTest1()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            Assert.IsFalse(this.algo.RunningAsPrimary(Now));
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task RunningAsPrimaryTest2()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo.CheckPrimaryAsync(Now);
-            Assert.IsFalse(this.algo.RunningAsPrimary(Now));
+            await this.algo.CheckPrimaryAsync(now);
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task RunningAsPrimaryTest3()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            await this.algo.CheckPrimaryAsync(Now);
-            Assert.IsTrue(this.algo.RunningAsPrimary(Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo.CheckPrimaryAsync(now);
+            Assert.IsTrue(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
@@ -96,77 +97,96 @@ namespace HighAvailabilityModule.UnitTest
         [TestMethod]
         public async Task RunningAsPrimaryTest5()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            await this.algo.CheckPrimaryAsync(Now - Timeout + Interval);
-            Assert.IsFalse(this.algo.RunningAsPrimary(Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo.CheckPrimaryAsync(now - Timeout + Interval);
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task RunningAsPrimaryTest6()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            await this.algo.CheckPrimaryAsync(Now);
-            await this.algo.CheckPrimaryAsync(Now - Timeout + Interval);
-            Assert.IsTrue(this.algo.RunningAsPrimary(Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo.CheckPrimaryAsync(now);
+            await this.algo.CheckPrimaryAsync(now - Timeout + Interval);
+            Assert.IsTrue(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task RunningAsPrimaryTest7()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            Assert.IsFalse(this.algo.RunningAsPrimary(Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task RunningAsPrimaryTest8()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            await this.algo3.CheckPrimaryAsync(Now);
-            Assert.IsFalse(this.algo3.RunningAsPrimary(Now));
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo3.CheckPrimaryAsync(now);
+            Assert.IsFalse(this.algo3.RunningAsPrimary(now));
         }
 
         [TestMethod]
         public async Task AffiliatedAsPrimary1()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo.CheckAffiliatedAsync(Now);
-            Assert.IsTrue(this.algo.AffiliatedASPrimary());
+            await this.algo.CheckAffiliatedAsync(now);
+            Assert.IsTrue(this.algo.AffiliatedASPrimary(now));
         }
 
         [TestMethod]
         public async Task AffiliatedAsPrimary2()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo3.CheckAffiliatedAsync(Now);
-            Assert.IsFalse(this.algo3.AffiliatedASPrimary());
+            await this.algo3.CheckAffiliatedAsync(now);
+            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
         }
 
         [TestMethod]
         public async Task AffiliatedAsPrimary3()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, Now));
-            await this.algo3.CheckAffiliatedAsync(Now);
-            Assert.IsTrue(this.algo3.AffiliatedASPrimary());
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo3.CheckAffiliatedAsync(now);
+            Assert.IsTrue(this.algo3.AffiliatedASPrimary(now));
         }
 
         [TestMethod]
         public async Task AffiliatedAsPrimary4()
         {
+            DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client2Uuid, ClientUtypeA, ClientUname2, Now));
-            await this.algo3.CheckAffiliatedAsync(Now);
-            Assert.IsFalse(this.algo3.AffiliatedASPrimary());
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client2Uuid, ClientUtypeA, ClientUname2, now));
+            await this.algo3.CheckAffiliatedAsync(now);
+            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
+        }
+
+        [TestMethod]
+        public async Task AffiliatedAsPrimary5()
+        {
+            DateTime now = DateTime.UtcNow;
+            this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
+            this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
+            await this.algo3.CheckAffiliatedAsync(now - Timeout);
+            Assert.IsFalse(this.algo3.AffiliatedASPrimary(now));
         }
 
         [TestMethod]
         public async Task HeartBeatAsPrimaryTest1()
         {
-            await this.algo.CheckPrimaryAsync(Now);
+            DateTime now = DateTime.UtcNow;
+            await this.algo.CheckPrimaryAsync(now);
             await this.algo.HeartBeatAsPrimaryAsync();
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }

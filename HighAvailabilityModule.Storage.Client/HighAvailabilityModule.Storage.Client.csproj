@@ -8,6 +8,8 @@
     <SignAssembly>true</SignAssembly>
     <DelaySign>true</DelaySign>
     <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Storage.Client</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Storage.Client</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

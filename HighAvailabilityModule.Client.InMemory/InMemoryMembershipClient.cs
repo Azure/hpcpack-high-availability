@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Client.InMemory
+namespace Microsoft.Hpc.HighAvailabilityModule.Client.InMemory
 {
     using System;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class InMemoryMembershipClient : IMembershipClient
     {

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>HighAvailabilityModule.SQL</id>
+        <id>Microsoft.Hpc.HighAvailabilityModule.SQL</id>
         <version>1.0.0</version>
         <title>Microsoft HPC Pack 2019 HA Module Nuget</title>
         <authors>Microsoft</authors>
@@ -11,20 +11,20 @@
             <group>
                 <dependency id="System.Data.Common" version="4.3.0" />
                 <dependency id="System.Data.SqlClient" version="4.6.1" />
-                <dependency id="HighAvailabilityModule.Interface" version="1.0" /> 
+                <dependency id="Microsoft.Hpc.HighAvailabilityModule.Interface" version="1.0" /> 
             </group>
         </dependencies>
         <references>
             <group>
-                <reference file="HighAvailabilityModule.Client.SQL.dll" />
-                <reference file="HighAvailabilityModule.Storage.Client.dll" />
-                <reference file="HighAvailabilityModule.Util.SQL.dll" />
+                <reference file="Microsoft.Hpc.HighAvailabilityModule.Client.SQL.dll" />
+                <reference file="Microsoft.Hpc.HighAvailabilityModule.Storage.Client.dll" />
+                <reference file="Microsoft.Hpc.HighAvailabilityModule.Util.SQL.dll" />
             </group>
         </references>
     </metadata>
     <files>
-        <file src="..\HighAvailabilityModule.Client.SQL\bin\Debug\netstandard2.0\HighAvailabilityModule.Client.SQL.dll" target="lib\netstandard20"/>
-        <file src="..\HighAvailabilityModule.Storage.Client\bin\Debug\netstandard2.0\HighAvailabilityModule.Storage.Client.dll" target="lib\netstandard20"/>
-        <file src="..\HighAvailabilityModule.util.SQL\bin\Debug\netstandard2.0\HighAvailabilityModule.Util.SQL.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Client.SQL\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Client.SQL.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Storage.Client\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Storage.Client.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.util.SQL\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Util.SQL.dll" target="lib\netstandard20"/>
     </files>
 </package>

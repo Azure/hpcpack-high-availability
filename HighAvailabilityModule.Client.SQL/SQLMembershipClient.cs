@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Client.SQL
+namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 {
     using System;
     using System.Threading.Tasks;
     using System.Data;
     using System.Data.SqlClient;
 
-    using HighAvailabilityModule.Interface;
-    using HighAvailabilityModule.Util.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Util.SQL;
 
     public class SQLMembershipClient: IMembershipClient
     {

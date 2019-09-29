@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.E2ETest.Runner
+namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.Runner
 {
     using System;
     using System.Threading.Tasks;
     using System.Diagnostics;
 
-    using HighAvailabilityModule.Client.Rest;
-    using HighAvailabilityModule.Client.SQL;
-    using HighAvailabilityModule.E2ETest.TestCases;
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.Rest;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
     using Microsoft.AspNetCore.Mvc.ModelBinding;
 
     public static class Program
