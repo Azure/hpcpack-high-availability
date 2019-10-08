@@ -33,7 +33,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 
         private const string GetParameterSpName = "dbo.GetParameter";
 
-        public static TraceSource ts = new TraceSource("HpcHighAvailablity.SQLMembershipClient");
+        public static readonly TraceSource ts = new TraceSource("Microsoft.Hpc.HighAvailablity.SQLMembershipClient");
 
         public SQLMembershipClient(string utype, string uname, TimeSpan operationTimeout, string conStr) : this(operationTimeout, conStr)
         {

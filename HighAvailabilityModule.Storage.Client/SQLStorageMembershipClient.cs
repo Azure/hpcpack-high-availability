@@ -34,7 +34,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         private const string GetDataTimeSpName = "dbo.GetDataTime";
 
-        public static TraceSource ts = new TraceSource("HpcHighAvailablity.SQLStorageMembershipClient");
+        public static readonly TraceSource ts = new TraceSource("Microsoft.Hpc.HighAvailablity.SQLStorageMembershipClient");
 
         private string value;
 
