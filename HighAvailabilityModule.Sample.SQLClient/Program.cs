@@ -4,6 +4,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
 {
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
     using Microsoft.Hpc.HighAvailabilityModule.Algorithm;

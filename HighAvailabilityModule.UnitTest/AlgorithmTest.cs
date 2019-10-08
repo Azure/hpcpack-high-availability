@@ -336,11 +336,10 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         public async Task GetPrimaryTestWithAffinityTest4()
         {
             await this.algo2.GetPrimaryAsync();
-            this.algo3.GetPrimaryAsync();
+            var task = this.algo3.GetPrimaryAsync();
             await this.algo.GetPrimaryAsync();
-            this.algo.KeepPrimaryAsync();
+            await task;
 
-            await Task.Delay(Interval * 1.5).ConfigureAwait(false);
             this.algo.Stop();
             this.algo3.Stop();
 

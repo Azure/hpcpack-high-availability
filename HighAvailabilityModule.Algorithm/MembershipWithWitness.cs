@@ -30,7 +30,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         internal CancellationToken AlgorithmCancellationToken => this.AlgorithmCancellationTokenSource.Token;
 
-        private static TraceSource ts = new TraceSource("Microsoft.Hpc.Highavailablity");
+        public static TraceSource ts = new TraceSource("HpcHighAvailablity.Algorithm");
 
         private string AffinityType;
 

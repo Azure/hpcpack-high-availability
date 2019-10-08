@@ -34,6 +34,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         private const string GetDataTimeSpName = "dbo.GetDataTime";
 
+        public static TraceSource ts = new TraceSource("HpcHighAvailablity.SQLStorageMembershipClient");
+
         private string value;
 
         private string type;
@@ -75,7 +77,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when getting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when getting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when getting data entry: {ex.ToString()}");
             }
             finally
@@ -300,7 +302,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when setting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when setting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when setting data entry: {ex.ToString()}");
             }
             finally
@@ -364,7 +366,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when deleting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when deleting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when deleting data entry: {ex.ToString()}");
             }
             finally
@@ -403,7 +405,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when enumerating data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when enumerating data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when enumerating data entry: {ex.ToString()}");
             }
             finally
@@ -435,7 +437,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError($"Error occured {ex.ToString()}");
+                    ts.TraceEvent(TraceEventType.Error, 0, $"Error occured {ex.ToString()}");
                     throw;
                 }
                 finally

@@ -6,6 +6,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
     using System.Threading.Tasks;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Diagnostics;
 
     using Microsoft.Hpc.HighAvailabilityModule.Interface;
     using Microsoft.Hpc.HighAvailabilityModule.Util.SQL;
@@ -31,6 +32,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
         private const string GetHeartBeatSpName = "dbo.GetHeartBeat";
 
         private const string GetParameterSpName = "dbo.GetParameter";
+
+        public static TraceSource ts = new TraceSource("HpcHighAvailablity.SQLMembershipClient");
 
         public SQLMembershipClient(string utype, string uname, TimeSpan operationTimeout, string conStr) : this(operationTimeout, conStr)
         {
@@ -74,6 +77,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
             }
             catch (Exception ex)
             {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when sending heartbeat entry: {ex.ToString()}");
                 Console.WriteLine($"[{this.Uuid}] Error occured when sending heartbeat entry: {ex.ToString()}");
                 throw;
             }
@@ -116,6 +120,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
             }
             catch (Exception ex)
             {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when getting heartbeat entry: {ex.ToString()}");
                 Console.WriteLine($"[{this.Uuid}] Error occured when getting heartbeat entry: {ex.ToString()}");
                 throw;
             }
@@ -155,6 +160,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
             }
             catch (Exception ex)
             {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when getting parameter: {ex.ToString()}");
                 Console.WriteLine($"[{this.Uuid}] Error occured when getting parameter: {ex.ToString()}");
                 throw;
             }
