@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <AspNetCoreHostingModel>InProcess</AspNetCoreHostingModel>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Server.Rest</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Server.Rest</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

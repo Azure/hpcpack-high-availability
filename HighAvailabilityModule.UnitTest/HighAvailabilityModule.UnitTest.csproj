@@ -1,9 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <SignAssembly>true</SignAssembly>
+
+    <DelaySign>true</DelaySign>
+
+    <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.UnitTest</AssemblyName>
+
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.UnitTest</RootNamespace>
+
   </PropertyGroup>
 
   <ItemGroup>

@@ -1,14 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Client.SQL
+namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 {
     using System;
     using System.Threading.Tasks;
     using System.Data;
     using System.Data.SqlClient;
+    using System.Diagnostics;
 
-    using HighAvailabilityModule.Interface;
-    using HighAvailabilityModule.Util.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Util.SQL;
 
     public class SQLMembershipClient: IMembershipClient
     {
@@ -30,17 +31,26 @@ namespace HighAvailabilityModule.Client.SQL
 
         private const string GetHeartBeatSpName = "dbo.GetHeartBeat";
 
-        public SQLMembershipClient(string utype, string uname, TimeSpan operationTimeout, string conStr) : this(conStr)
+        private const string GetParameterSpName = "dbo.GetParameter";
+
+        public static readonly TraceSource ts = new TraceSource("Microsoft.Hpc.HighAvailablity.SQLMembershipClient");
+
+        public SQLMembershipClient(string utype, string uname, TimeSpan operationTimeout, string conStr) : this(operationTimeout, conStr)
         {
             this.Uuid = Guid.NewGuid().ToString();
             this.Utype = utype;
             this.Uname = uname;
-            this.OperationTimeout = operationTimeout;
         }
 
         public SQLMembershipClient(string conStr)
         {
             this.ConStr = this.sqlUtil.GetConStr(conStr, this.OperationTimeout);
+        }
+
+        public SQLMembershipClient(TimeSpan operationTimeout, string conStr)
+        {
+            this.OperationTimeout = operationTimeout;
+            this.ConStr = this.sqlUtil.GetConStr(conStr, operationTimeout);
         }
 
         public static SQLMembershipClient CreateNew(string utype, string uname, TimeSpan operationTimeout, string conStr) => new SQLMembershipClient(utype, uname, operationTimeout, conStr);
@@ -67,6 +77,7 @@ namespace HighAvailabilityModule.Client.SQL
             }
             catch (Exception ex)
             {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when sending heartbeat entry: {ex.ToString()}");
                 Console.WriteLine($"[{this.Uuid}] Error occured when sending heartbeat entry: {ex.ToString()}");
                 throw;
             }
@@ -109,7 +120,48 @@ namespace HighAvailabilityModule.Client.SQL
             }
             catch (Exception ex)
             {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when getting heartbeat entry: {ex.ToString()}");
                 Console.WriteLine($"[{this.Uuid}] Error occured when getting heartbeat entry: {ex.ToString()}");
+                throw;
+            }
+            finally
+            {
+                con.Close();
+                con.Dispose();
+                comStr.Dispose();
+            }
+        }
+
+        public async Task<int> GetParameterAsync(string parameterName)
+        {
+            int res;
+            SqlConnection con = new SqlConnection(this.ConStr);
+            string StoredProcedure = GetParameterSpName;
+            SqlCommand comStr = new SqlCommand(StoredProcedure, con);
+            comStr.CommandType = CommandType.StoredProcedure;
+            comStr.CommandTimeout = Convert.ToInt32(Math.Ceiling(this.OperationTimeout.TotalSeconds));
+
+            comStr.Parameters.Add("@parameterName", SqlDbType.NVarChar).Value = parameterName;
+
+            try
+            {
+                await con.OpenAsync();
+                SqlDataReader ReturnedEntry = await comStr.ExecuteReaderAsync();
+                if (ReturnedEntry.HasRows)
+                {
+                    ReturnedEntry.Read();
+                    res = (int)ReturnedEntry[0];
+                }
+                else
+                {
+                    res = default(int);
+                }
+                return res;
+            }
+            catch (Exception ex)
+            {
+                ts.TraceEvent(TraceEventType.Error, 0, $"[{this.Uuid}] Error occured when getting parameter: {ex.ToString()}");
+                Console.WriteLine($"[{this.Uuid}] Error occured when getting parameter: {ex.ToString()}");
                 throw;
             }
             finally

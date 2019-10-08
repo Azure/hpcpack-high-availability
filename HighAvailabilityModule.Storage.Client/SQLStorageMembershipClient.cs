@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Storage.Client
+namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 {
     using System;
     using System.Collections.Generic;
@@ -9,8 +9,8 @@ namespace HighAvailabilityModule.Storage.Client
     using System.Data.SqlClient;
     using System.Diagnostics;
 
-    using HighAvailabilityModule.Interface;
-    using HighAvailabilityModule.Util.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Util.SQL;
 
     public class SQLStorageMembershipClient : IMembershipStorageClient
     {
@@ -33,6 +33,8 @@ namespace HighAvailabilityModule.Storage.Client
         private const string EnumerateDataEntrySpName = "dbo.EnumerateDataEntry";
 
         private const string GetDataTimeSpName = "dbo.GetDataTime";
+
+        public static readonly TraceSource ts = new TraceSource("Microsoft.Hpc.HighAvailablity.SQLStorageMembershipClient");
 
         private string value;
 
@@ -75,7 +77,7 @@ namespace HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when getting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when getting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when getting data entry: {ex.ToString()}");
             }
             finally
@@ -96,6 +98,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Guid.Parse(value);
             }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not Guid.");
@@ -111,6 +117,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.String")
             {
                 return value;
+            }
+            else if(type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -128,6 +138,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Int32.Parse(value); 
             }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not int.");
@@ -143,6 +157,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.Int64")
             {
                 return Int64.Parse(value);
+            }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -160,6 +178,10 @@ namespace HighAvailabilityModule.Storage.Client
             {
                 return Double.Parse(value);
             }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
+            }
             else
             {
                 throw new InvalidOperationException("Input value is not double.");
@@ -175,6 +197,10 @@ namespace HighAvailabilityModule.Storage.Client
             if (type == "System.String[]")
             {
                 return value.Split(",".ToCharArray());
+            }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -197,6 +223,10 @@ namespace HighAvailabilityModule.Storage.Client
                     valueByte[i] = byte.Parse(s[i]);
                 }
                 return valueByte;
+            }
+            else if (type == string.Empty)
+            {
+                throw new EmptyValueException("Get empty value.");
             }
             else
             {
@@ -272,7 +302,7 @@ namespace HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when setting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when setting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when setting data entry: {ex.ToString()}");
             }
             finally
@@ -336,7 +366,7 @@ namespace HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when deleting data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when deleting data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when deleting data entry: {ex.ToString()}");
             }
             finally
@@ -375,7 +405,7 @@ namespace HighAvailabilityModule.Storage.Client
             }
             catch (Exception ex)
             {
-                Trace.TraceError($"Error occured when enumerating data entry: {ex.ToString()}");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Error occured when enumerating data entry: {ex.ToString()}");
                 throw new InvalidOperationException($"Error occured when enumerating data entry: {ex.ToString()}");
             }
             finally
@@ -407,7 +437,7 @@ namespace HighAvailabilityModule.Storage.Client
                 }
                 catch (Exception ex)
                 {
-                    Trace.TraceError($"Error occured {ex.ToString()}");
+                    ts.TraceEvent(TraceEventType.Error, 0, $"Error occured {ex.ToString()}");
                     throw;
                 }
                 finally
@@ -428,6 +458,19 @@ namespace HighAvailabilityModule.Storage.Client
                 || lastSeenType != type
                 || (lastSeenValue == string.Empty && value != string.Empty)
                 || (lastSeenType == string.Empty && type != string.Empty);
+        }
+
+        class EmptyValueException : ApplicationException
+        {
+            public EmptyValueException(string message) : base(message) { }
+
+            public override string Message
+            {
+                get
+                {
+                    return base.Message;
+                }
+            }
         }
     }
 }

@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Server.InMemory
+namespace Microsoft.Hpc.HighAvailabilityModule.Server.InMemory
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace HighAvailabilityModule.Server.InMemory
     using System.Runtime.ExceptionServices;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class InMemoryMembershipServer : IMembership
     {

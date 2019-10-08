@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.E2ETest.TestCases
+namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases
 {
     using System;
     using System.Collections.Generic;
     using System.Text;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.E2ETest.TestCases.Infrastructure;
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class BasicTest
     {

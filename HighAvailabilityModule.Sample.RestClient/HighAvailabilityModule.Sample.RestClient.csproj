@@ -1,9 +1,11 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
     <LangVersion>latest</LangVersion>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Sample.RestClient</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Sample.RestClient</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

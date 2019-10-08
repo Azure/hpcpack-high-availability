@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>HighAvailabilityModule.Interface</id>
+        <id>Microsoft.Hpc.HighAvailabilityModule.Interface</id>
         <version>1.0.0</version>
         <title>Microsoft HPC Pack 2019 HA Module Nuget</title>
         <authors>Microsoft</authors>
@@ -9,11 +9,11 @@
         <description>Nuget package for Microsoft HPC Pack 2019 HA Module</description>
         <references>
             <group>
-                <reference file="HighAvailabilityModule.Interface.dll" />
+                <reference file="Microsoft.Hpc.HighAvailabilityModule.Interface.dll" />
             </group>
         </references>
     </metadata>
     <files>
-        <file src="..\HighAvailabilityModule.Interface\bin\Debug\netstandard2.0\HighAvailabilityModule.Interface.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Interface\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Interface.dll" target="lib\netstandard20"/>
     </files>
 </package>

@@ -3,6 +3,8 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <DebugType>full</DebugType>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Server.InMemory</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Server.InMemory</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

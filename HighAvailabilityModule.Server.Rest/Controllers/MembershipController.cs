@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Server.Rest.Controllers
+namespace Microsoft.Hpc.HighAvailabilityModule.Server.Rest.Controllers
 {
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     using Microsoft.AspNetCore.Mvc;
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
     <metadata>
-        <id>HighAvailabilityModule.Algorithm</id>
+        <id>Microsoft.Hpc.HighAvailabilityModule.Algorithm</id>
         <version>1.0.0</version>
         <title>Microsoft HPC Pack 2019 HA Module Nuget</title>
         <authors>Microsoft</authors>
@@ -9,16 +9,16 @@
         <description>Nuget package for Microsoft HPC Pack 2019 HA Module</description>
         <dependencies>
             <group>
-                <dependency id="HighAvailabilityModule.Interface" version="1.0" />
+                <dependency id="Microsoft.Hpc.HighAvailabilityModule.Interface" version="1.0" />
             </group>
         </dependencies>
         <references>
             <group>
-                <reference file="HighAvailabilityModule.Algorithm.dll" />
+                <reference file="Microsoft.Hpc.HighAvailabilityModule.Algorithm.dll" />
             </group>
         </references>
     </metadata>
     <files>
-        <file src="..\HighAvailabilityModule.Algorithm\bin\Debug\netstandard2.0\HighAvailabilityModule.Algorithm.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Algorithm\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Algorithm.dll" target="lib\netstandard20"/>
     </files>
 </package>

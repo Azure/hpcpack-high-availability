@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Client.Rest
+namespace Microsoft.Hpc.HighAvailabilityModule.Client.Rest
 {
     using System;
     using System.Collections.Generic;
@@ -8,7 +8,7 @@ namespace HighAvailabilityModule.Client.Rest
     using System.Text;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class RestMembershipClient : IMembershipClient
     {

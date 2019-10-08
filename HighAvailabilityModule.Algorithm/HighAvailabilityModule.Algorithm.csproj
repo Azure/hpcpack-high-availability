@@ -2,12 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>HighAvailabilityModule.Algorithm</RootNamespace>
-    <AssemblyName>HighAvailabilityModule.Algorithm</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Algorithm</RootNamespace>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Algorithm</AssemblyName>
     <LangVersion>latest</LangVersion>
 	<DebugType>full</DebugType>
 	<SignAssembly>true</SignAssembly>
 	<DelaySign>true</DelaySign>
+	<AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
 
   <ItemGroup>

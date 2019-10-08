@@ -4,6 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <DebugType>full</DebugType>
+    <SignAssembly>true</SignAssembly>
+    <DelaySign>true</DelaySign>
+    <AssemblyOriginatorKeyFile>35MSSharedLib1024.snk</AssemblyOriginatorKeyFile>
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Interface</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Interface</RootNamespace>
   </PropertyGroup>
 
 </Project>

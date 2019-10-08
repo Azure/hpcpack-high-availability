@@ -14,7 +14,7 @@ GO
 CREATE TABLE ParameterTable
 (heartbeatTimeOut int);
 INSERT INTO dbo.ParameterTable (heartbeatTimeOut)
-VALUES(1000);
+VALUES(5000);
 GO
 
 IF OBJECT_ID('HeartBeatInvalid') IS NOT NULL
@@ -146,4 +146,14 @@ AS
 		END
 	ELSE
 		SELECT TOP 1 uuid, utype, uname, timeStamp FROM dbo.HeartBeatTable WHERE utype=@utype;
+GO
+
+IF OBJECT_ID('GetParameter') IS NOT NULL
+	DROP PROCEDURE GetParameter;
+GO
+CREATE PROCEDURE GetParameter
+	@parameterName nvarchar(50)
+AS
+	SET NOCOUNT ON
+	EXEC ('SELECT TOP 1 ' +@parameterName +' FROM dbo.ParameterTable')
 GO

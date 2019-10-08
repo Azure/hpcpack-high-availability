@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Server.Rest
+namespace Microsoft.Hpc.HighAvailabilityModule.Server.Rest
 {
     using Microsoft.AspNetCore;
     using Microsoft.AspNetCore.Hosting;

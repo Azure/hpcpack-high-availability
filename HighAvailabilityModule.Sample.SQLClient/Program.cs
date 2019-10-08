@@ -1,20 +1,26 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Sample.SQLClient
+namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
 {
     using System;
     using System.Collections;
+    using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Client.SQL;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.SQL;
     class Program
     {
         static async Task Main(string[] args)
         {
+            TraceSource ts = MembershipWithWitness.ts;
+            ts.Switch.Level = SourceLevels.Warning;
+            ts.Listeners.Add(new TextWriterTraceListener(Console.Out));
+
             string utype;
             string uname;
             string conStr;
+            string AffinityType = string.Empty;
 
             ArrayList AllType = new ArrayList();
 
@@ -24,6 +30,7 @@ namespace HighAvailabilityModule.Sample.SQLClient
                 if (utype == "query")
                 {
                     uname = "-1";
+                    AffinityType = "";
                     for (int i = 2; i < args.Length; i++)
                     {
                         AllType.Add(args[i]);
@@ -34,6 +41,10 @@ namespace HighAvailabilityModule.Sample.SQLClient
                 {
                     uname = args[2];
                     conStr = args[3];
+                    if (args.Length == 5)
+                    {
+                        AffinityType = args[4];
+                    }
                 }
             }
             else
@@ -46,7 +57,7 @@ namespace HighAvailabilityModule.Sample.SQLClient
             var timeout = TimeSpan.FromSeconds(5);
 
             SQLMembershipClient client = new SQLMembershipClient(utype, uname, interval, conStr);
-            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout);
+            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout, AffinityType);
 
             Console.WriteLine("Uuid:{0}", client.Uuid);
             Console.WriteLine("Type:{0}", client.Utype);

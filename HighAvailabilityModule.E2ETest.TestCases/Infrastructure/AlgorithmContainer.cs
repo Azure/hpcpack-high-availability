@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.E2ETest.TestCases.Infrastructure
+namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
 {
     using System;
     using System.Diagnostics;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Interface;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
     public class AlgorithmContainer
     {
@@ -35,7 +35,7 @@ namespace HighAvailabilityModule.E2ETest.TestCases.Infrastructure
         public void BuildAlgoInstance()
         {
             TestClient client = new TestClient(this.clientFactory(this.utype, this.uname, this.interval));
-            MembershipWithWitness algo = new MembershipWithWitness(client, this.interval, this.timeout);
+            MembershipWithWitness algo = new MembershipWithWitness(client, this.interval, this.timeout, string.Empty);
 #pragma warning disable 4014
             algo.RunAsync(null, null);
 #pragma warning restore 4014

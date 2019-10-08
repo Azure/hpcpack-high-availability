@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Interface
+namespace Microsoft.Hpc.HighAvailabilityModule.Interface
 {
     using System;
     public class HeartBeatEntryDTO

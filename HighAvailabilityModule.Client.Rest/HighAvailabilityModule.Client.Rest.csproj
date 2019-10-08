@@ -6,6 +6,8 @@
     <LangVersion>latest</LangVersion>
     <ApplicationIcon />
     <StartupObject />
+    <AssemblyName>Microsoft.Hpc.HighAvailabilityModule.Client.Rest</AssemblyName>
+    <RootNamespace>Microsoft.Hpc.HighAvailabilityModule.Client.Rest</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

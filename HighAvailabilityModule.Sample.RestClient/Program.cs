@@ -1,6 +1,6 @@
 ﻿// Copyright (c) Microsoft Corporation.
 // Licensed under the MIT license.
-namespace HighAvailabilityModule.Sample.RestClient
+namespace Microsoft.Hpc.HighAvailabilityModule.Sample.RestClient
 {
     using System;
     using System.Collections;
@@ -8,8 +8,8 @@ namespace HighAvailabilityModule.Sample.RestClient
     using System.Runtime.InteropServices.ComTypes;
     using System.Threading.Tasks;
 
-    using HighAvailabilityModule.Algorithm;
-    using HighAvailabilityModule.Client.Rest;
+    using Microsoft.Hpc.HighAvailabilityModule.Algorithm;
+    using Microsoft.Hpc.HighAvailabilityModule.Client.Rest;
 
     class Program
     {
@@ -48,7 +48,7 @@ namespace HighAvailabilityModule.Sample.RestClient
 
             RestMembershipClient client = new RestMembershipClient(utype, uname, interval);
 
-            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout);
+            MembershipWithWitness algo = new MembershipWithWitness(client, interval, timeout, string.Empty);
 
             Console.WriteLine("Uuid:{0}",client.Uuid);
             Console.WriteLine("Type:{0}",client.Utype);

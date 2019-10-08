@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "HighAvailabilityModule.Sample.SQLClient": {
+      "commandName": "Project"
+    }
+  }
+}
