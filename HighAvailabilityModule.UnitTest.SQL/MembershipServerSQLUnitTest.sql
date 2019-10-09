@@ -78,7 +78,7 @@ BEGIN
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
 	SET @ClientUtname2 = '2';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut, @now);
@@ -128,7 +128,7 @@ BEGIN
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
 	SET @ClientUtname2 = '2';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut + 200, @now);
@@ -173,7 +173,7 @@ BEGIN
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
 	SET @ClientUtname2 = '2';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut, @now);
@@ -219,7 +219,7 @@ BEGIN
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
 	SET @ClientUtname2 = '2';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut, @now);
@@ -404,7 +404,7 @@ BEGIN
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
 	SET @ClientUtname2 = '2';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut, @now);
@@ -606,7 +606,7 @@ BEGIN
 	SET @Client1Uuid = 'cdca5b45-6ea1-4d91-81f6-d39f4821e791';
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @DefaultTime = CONVERT(DATETIME,'1753-01-01 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut, @now);
@@ -647,7 +647,7 @@ BEGIN
 	SET @Client1Uuid = 'cdca5b45-6ea1-4d91-81f6-d39f4821e791';
 	SET @ClientUtypeA = 'A';
 	SET @ClientUtname1 = '1';
-	SET @TimeOut = 1000;
+	SET @TimeOut = 5000;
 	SET @now = CONVERT(DATETIME,'2019-07-11 12:00:00.000',21);
 	SET @Client1Time = DATEADD(MILLISECOND, -@TimeOut + 200, @now);
 
