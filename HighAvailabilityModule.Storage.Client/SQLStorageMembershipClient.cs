@@ -120,7 +120,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else
             {
-                ts.TraceEvent(TraceEventType.Error, 0, "Input type is not valid.");
+                ts.TraceEvent(TraceEventType.Error, 0, $"Input type is not valid: {type}.");
                 throw new InvalidOperationException("Input type is not valid.");
             }
         }
