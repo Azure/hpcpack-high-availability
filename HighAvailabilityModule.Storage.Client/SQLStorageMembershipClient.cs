@@ -116,17 +116,12 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == "System.Byte[]")
             {
-                string[] s = value.Split(",".ToCharArray());
-                byte[] valueByte = new byte[s.Length];
-                for (int i = 0; i < s.Length; i++)
-                {
-                    valueByte[i] = byte.Parse(s[i]);
-                }
-                return valueByte;
+                return System.Text.Encoding.UTF8.GetBytes(value);
             }
             else
             {
-                return default;
+                ts.TraceEvent(TraceEventType.Error, 0, "Input type is not valid.");
+                throw new InvalidOperationException("Input type is not valid.");
             }
         }
 
@@ -381,7 +376,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task SetByteArrayAsync(string path, string key, byte[] value, bool forceWrite = false)
         {
-            await SetDataEntryAsync(path, key, string.Join(",", value), "System.Byte[]", forceWrite).ConfigureAwait(false);
+            await SetDataEntryAsync(path, key, System.Text.Encoding.UTF8.GetString(value), "System.Byte[]", forceWrite).ConfigureAwait(false);
         }
 
         public async Task DeleteDataEntryAsync(string path, string key)
