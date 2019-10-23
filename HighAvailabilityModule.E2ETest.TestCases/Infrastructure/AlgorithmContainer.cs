@@ -47,7 +47,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
             Console.WriteLine($"Fail instance {this.Algo.Dump()} ");
             Trace.TraceInformation($"[{DateTime.UtcNow:O}] Fail instance {this.Algo.Dump()}");
             this.Algo.Stop();
-            await Task.Delay(1000);
+            await Task.Delay(1000).ConfigureAwait(false);
             this.BuildAlgoInstance();
         }
     }

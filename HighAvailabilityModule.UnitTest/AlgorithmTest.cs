@@ -70,7 +70,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo.CheckPrimaryAsync(now);
+            await this.algo.CheckPrimaryAsync(now).ConfigureAwait(false);
             Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo.CheckPrimaryAsync(now);
+            await this.algo.CheckPrimaryAsync(now).ConfigureAwait(false);
             Assert.IsTrue(this.algo.RunningAsPrimary(now));
         }
 
@@ -90,7 +90,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now - Timeout));
-            await this.algo.CheckPrimaryAsync(now);
+            await this.algo.CheckPrimaryAsync(now).ConfigureAwait(false);
             Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
@@ -100,7 +100,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo.CheckPrimaryAsync(now - Timeout + Interval);
+            await this.algo.CheckPrimaryAsync(now - Timeout + Interval).ConfigureAwait(false);
             Assert.IsFalse(this.algo.RunningAsPrimary(now));
         }
 
@@ -110,8 +110,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo.CheckPrimaryAsync(now);
-            await this.algo.CheckPrimaryAsync(now - Timeout + Interval);
+            await this.algo.CheckPrimaryAsync(now).ConfigureAwait(false);
+            await this.algo.CheckPrimaryAsync(now - Timeout + Interval).ConfigureAwait(false);
             Assert.IsTrue(this.algo.RunningAsPrimary(now));
         }
 
@@ -130,7 +130,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo3.CheckPrimaryAsync(now);
+            await this.algo3.CheckPrimaryAsync(now).ConfigureAwait(false);
             Assert.IsFalse(this.algo3.RunningAsPrimary(now));
         }
 
@@ -139,7 +139,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo.CheckAffinityAsync(now);
+            await this.algo.CheckAffinityAsync(now).ConfigureAwait(false);
             Assert.IsTrue(this.algo.AffinityAsPrimary(now));
         }
 
@@ -148,7 +148,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         {
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
-            await this.algo3.CheckAffinityAsync(now);
+            await this.algo3.CheckAffinityAsync(now).ConfigureAwait(false);
             Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
         }
 
@@ -158,7 +158,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo3.CheckAffinityAsync(now);
+            await this.algo3.CheckAffinityAsync(now).ConfigureAwait(false);
             Assert.IsTrue(this.algo3.AffinityAsPrimary(now));
         }
 
@@ -168,7 +168,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client2Uuid, ClientUtypeA, ClientUname2, now));
-            await this.algo3.CheckAffinityAsync(now);
+            await this.algo3.CheckAffinityAsync(now).ConfigureAwait(false);
             Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
         }
 
@@ -178,7 +178,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
             DateTime now = DateTime.UtcNow;
             this.server.CurrentTable = new Dictionary<string, HeartBeatEntry>();
             this.server.CurrentTable.Add(ClientUtypeA, new HeartBeatEntry(Client1Uuid, ClientUtypeA, ClientUname1, now));
-            await this.algo3.CheckAffinityAsync(now - Timeout);
+            await this.algo3.CheckAffinityAsync(now - Timeout).ConfigureAwait(false);
             Assert.IsFalse(this.algo3.AffinityAsPrimary(now));
         }
 
@@ -186,8 +186,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         public async Task HeartBeatAsPrimaryTest1()
         {
             DateTime now = DateTime.UtcNow;
-            await this.algo.CheckPrimaryAsync(now);
-            await this.algo.HeartBeatAsPrimaryAsync();
+            await this.algo.CheckPrimaryAsync(now).ConfigureAwait(false);
+            await this.algo.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
@@ -195,27 +195,27 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [ExpectedException(typeof(InvalidOperationException))]
         public async Task HeartBeatAsPrimaryTest2()
         {
-            await this.algo.HeartBeatAsPrimaryAsync();
+            await this.algo.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
         }
 
         [TestMethod]
         public async Task HeartBeatAndCheckTest1()
         {
-            await this.algo.CheckPrimaryAsync(DateTime.UtcNow);
-            await this.algo.HeartBeatAsPrimaryAsync();
-            await this.algo.CheckPrimaryAsync(DateTime.UtcNow);
+            await this.algo.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
+            await this.algo.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
+            await this.algo.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
             Assert.IsTrue(this.algo.RunningAsPrimary(DateTime.UtcNow));
         }
 
         [TestMethod]
         public async Task HeartBeatAndCheckTest2()
         {
-            await this.algo.CheckPrimaryAsync(DateTime.UtcNow);
-            await this.algo.HeartBeatAsPrimaryAsync();
-            await this.algo.CheckPrimaryAsync(DateTime.UtcNow);
-            await this.algo3.CheckPrimaryAsync(DateTime.UtcNow);
-            await this.algo3.HeartBeatAsPrimaryAsync();
-            await this.algo3.CheckPrimaryAsync(DateTime.UtcNow);
+            await this.algo.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
+            await this.algo.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
+            await this.algo.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
+            await this.algo3.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
+            await this.algo3.HeartBeatAsPrimaryAsync().ConfigureAwait(false);
+            await this.algo3.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
             Assert.IsTrue(this.algo.RunningAsPrimary(DateTime.UtcNow));
             Assert.IsTrue(this.algo3.RunningAsPrimary(DateTime.UtcNow));
         }
@@ -224,7 +224,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(2000)]
         public async Task GetPrimaryTest1()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             Assert.IsTrue(this.algo.RunningAsPrimary(DateTime.UtcNow));
         }
 
@@ -234,7 +234,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         {
             var getPrimaryTask = this.algo.GetPrimaryAsync();
             this.algo.Stop();
-            await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => getPrimaryTask);
+            await Assert.ThrowsExceptionAsync<TaskCanceledException>(() => getPrimaryTask).ConfigureAwait(false);
             Assert.IsFalse(this.algo.RunningAsPrimary(DateTime.UtcNow));
         }
 
@@ -242,7 +242,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTest3()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             this.algo.KeepPrimaryAsync();
             this.algo2.GetPrimaryAsync();
 
@@ -257,8 +257,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTest4()
         {
-            await this.algo.GetPrimaryAsync();
-            await this.algo2.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
+            await this.algo2.GetPrimaryAsync().ConfigureAwait(false);
 
             this.algo.Stop();
             this.algo2.Stop();
@@ -271,9 +271,9 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTest5()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             this.server.RemoveCurrent();
-            await this.algo.KeepPrimaryAsync();
+            await this.algo.KeepPrimaryAsync().ConfigureAwait(false);
 
             Assert.IsFalse(this.algo.RunningAsPrimary(DateTime.UtcNow));
         }
@@ -282,11 +282,11 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTest6()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             var task = this.algo.KeepPrimaryAsync();
             await Task.Delay(TimeSpan.FromSeconds(1)).ConfigureAwait(false);
             this.server.RemoveCurrent();
-            await task;
+            await task.ConfigureAwait(false);
 
             Assert.IsFalse(this.algo.RunningAsPrimary(DateTime.UtcNow));
         }
@@ -306,9 +306,9 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTestWithAffinityTest2()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             this.algo.KeepPrimaryAsync();
-            await this.algo3.GetPrimaryAsync();
+            await this.algo3.GetPrimaryAsync().ConfigureAwait(false);
 
             this.algo.Stop();
 
@@ -320,7 +320,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(5000)]
         public async Task GetPrimaryTestWithAffinityTest3()
         {
-            await this.algo2.GetPrimaryAsync();
+            await this.algo2.GetPrimaryAsync().ConfigureAwait(false);
             this.algo2.KeepPrimaryAsync();
             this.algo3.GetPrimaryAsync();
 
@@ -335,10 +335,10 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(6000)]
         public async Task GetPrimaryTestWithAffinityTest4()
         {
-            await this.algo2.GetPrimaryAsync();
+            await this.algo2.GetPrimaryAsync().ConfigureAwait(false);
             var task = this.algo3.GetPrimaryAsync();
-            await this.algo.GetPrimaryAsync();
-            await task;
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
+            await task.ConfigureAwait(false);
 
             this.algo.Stop();
             this.algo3.Stop();
@@ -356,7 +356,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(10000)]
         public async Task KeepPrimaryTest1()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             this.server.ReplyDelay = Interval * 0.9;
             this.algo.KeepPrimaryAsync();
             await Task.Delay(Timeout * 3).ConfigureAwait(false);
@@ -370,9 +370,9 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [Timeout(10000)]
         public async Task KeepPrimaryWithaffinityTest1()
         {
-            await this.algo.GetPrimaryAsync();
+            await this.algo.GetPrimaryAsync().ConfigureAwait(false);
             this.algo.KeepPrimaryAsync();
-            await this.algo3.GetPrimaryAsync();
+            await this.algo3.GetPrimaryAsync().ConfigureAwait(false);
             this.algo3.KeepPrimaryAsync();
 
             this.algo.Stop();

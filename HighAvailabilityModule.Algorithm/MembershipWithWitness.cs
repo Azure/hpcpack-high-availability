@@ -91,7 +91,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
             while (!this.RunningAsPrimary(DateTime.UtcNow) || !AffinityAsPrimary(DateTime.UtcNow))
             {
                 token.ThrowIfCancellationRequested();
-                await Task.Delay(this.HeartBeatInterval, token);
+                await Task.Delay(this.HeartBeatInterval, token).ConfigureAwait(false);
                 await this.CheckPrimaryAsync(DateTime.UtcNow).ConfigureAwait(false);
                 await this.CheckAffinityAsync(DateTime.UtcNow).ConfigureAwait(false);
 
@@ -105,14 +105,14 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         internal async Task CheckPrimaryAsync(DateTime now)
         {
-            await CheckPrimaryAuxAsync(now, this.Utype, LastSeenHeartBeatString);
+            await this.CheckPrimaryAuxAsync(now, this.Utype, LastSeenHeartBeatString).ConfigureAwait(false);
         }
 
         private async Task CheckPrimaryAuxAsync(DateTime now, string qtype, string name)
         {
             try
             {
-                var entry = await this.Client.GetHeartBeatEntryAsync(qtype);
+                var entry = await this.Client.GetHeartBeatEntryAsync(qtype).ConfigureAwait(false);
                 if (now > this.LastSeenHeartBeatDict[name].QueryTime)
                 {
                     lock (this.heartbeatLock)
@@ -143,7 +143,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
             {
                 var sendTime = DateTime.UtcNow;
                 ts.TraceEvent(TraceEventType.Information, 0, $"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.LastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.Uuid}, {this.LastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.TimeStamp:O}, Client Type: {this.Utype}");
-                await this.Client.HeartBeatAsync(new HeartBeatEntryDTO (this.Uuid, this.Utype, this.Uname, this.LastSeenHeartBeatDict[LastSeenHeartBeatString].Entry));
+                await this.Client.HeartBeatAsync(new HeartBeatEntryDTO (this.Uuid, this.Utype, this.Uname, this.LastSeenHeartBeatDict[LastSeenHeartBeatString].Entry)).ConfigureAwait(false);
                 ts.TraceEvent(TraceEventType.Information, 0, $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}");
             }
             catch (Exception ex)
@@ -197,7 +197,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         internal async Task CheckAffinityAsync(DateTime now)
         {
-            await CheckPrimaryAuxAsync(now, this.AffinityType, LastSeenAffinityString);
+            await this.CheckPrimaryAuxAsync(now, this.AffinityType, LastSeenAffinityString).ConfigureAwait(false);
         }
 
         public string Dump() => $"PrimaryUp = {this.PrimaryUp}, SelfUuid = {this.Uuid ?? string.Empty}, LastSeenUuid = {this.LastSeenHeartBeatDict[LastSeenHeartBeatString].Entry?.Uuid ?? string.Empty}, LastSeenQueryTime = {this.LastSeenHeartBeatDict[LastSeenHeartBeatString].QueryTime:O}, Client Type: {this.Utype}";

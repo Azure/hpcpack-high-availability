@@ -39,49 +39,49 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [TestMethod]
         public async Task HeartbeatTest1()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null));
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null)).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
         [TestMethod]
         public async Task HeartbeatTest2()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout);
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now)), Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout).ConfigureAwait(false);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false)), Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client2Uuid, ClientUtypeA, ClientUname2);
         }
 
         [TestMethod]
         public async Task HeartbeatTest3()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout + TimeSpan.FromSeconds(1));
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now)), Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout + TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false)), Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
         [TestMethod]
         public async Task HeartbeatTest4()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout);
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, null), Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout).ConfigureAwait(false);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, null), Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
         [TestMethod]
         public async Task HeartbeatTest5()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout);
-            HeartBeatEntry getEntry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout).ConfigureAwait(false);
+            HeartBeatEntry getEntry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false);
             var entry = new HeartBeatEntry(getEntry.Uuid, getEntry.Utype, getEntry.Uname, Now);
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, entry), Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, entry), Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client2Uuid, ClientUtypeA, ClientUname2);
         }
 
         [TestMethod]
         public async Task HeartbeatTest6()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - TimeSpan.FromSeconds(1));
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now)), Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false)), Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
             Assert.IsTrue(this.server.CurrentTable[ClientUtypeA].TimeStamp == Now);
         }
@@ -91,26 +91,26 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         {
             Task[] tasks = new[] { this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now),
                 this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, null), Now) };
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
         [TestMethod]
         public async Task HeartbeatTest8()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - TimeSpan.FromSeconds(1));
-            var entry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - TimeSpan.FromSeconds(1)).ConfigureAwait(false);
+            var entry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false);
             Task[] tasks = new[] { this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, entry), Now),
                 this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, entry), Now) };
-            await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
         }
 
         [TestMethod]
         public async Task HeartbeatTest9()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout);
-            var entry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now - Timeout).ConfigureAwait(false);
+            var entry = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false);
             Task[] tasks = new[] { this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client2Uuid, ClientUtypeA, ClientUname2, entry), Now),
                 this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, entry), Now) };
             await Task.WhenAll(tasks).ConfigureAwait(false);
@@ -120,10 +120,10 @@ namespace Microsoft.Hpc.HighAvailabilityModule.UnitTest
         [TestMethod]
         public async Task HeartbeatTest10()
         {
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now);
-            var entry1 = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now);
-            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client3Uuid, ClientUtypeB, ClientUname1, null), Now);
-            var entry2 = await this.server.GetHeartBeatEntryAsync(ClientUtypeB, Now);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client1Uuid, ClientUtypeA, ClientUname1, null), Now).ConfigureAwait(false);
+            var entry1 = await this.server.GetHeartBeatEntryAsync(ClientUtypeA, Now).ConfigureAwait(false);
+            await this.server.HeartBeatAsync(new HeartBeatEntryDTO(Client3Uuid, ClientUtypeB, ClientUname1, null), Now).ConfigureAwait(false);
+            var entry2 = await this.server.GetHeartBeatEntryAsync(ClientUtypeB, Now).ConfigureAwait(false);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client1Uuid, ClientUtypeA, ClientUname1);
             TestAssistantPackage.AssertCurrentEntry(this.server.CurrentTable, Client3Uuid, ClientUtypeB, ClientUname1);
         }

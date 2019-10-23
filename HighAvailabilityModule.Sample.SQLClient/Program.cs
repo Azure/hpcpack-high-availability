@@ -71,11 +71,11 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
                     {
                         try
                         {
-                            var primary = await client.GetHeartBeatEntryAsync(qtype);
+                            var primary = await client.GetHeartBeatEntryAsync(qtype).ConfigureAwait(false);
                             if (!primary.IsEmpty)
                             {
                                 Console.WriteLine($"[Query Result] Type:{primary.Utype}. Machine Name:{primary.Uname}. Running as primary. [{primary.TimeStamp}]");
-                                await Task.Delay(TimeSpan.FromSeconds(2));
+                                await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                             }
                         }
                         catch (Exception ex)
@@ -88,16 +88,16 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
             else
             {
                 await algo.RunAsync(
-                () => Task.Run(
-                    async () =>
-                    {
-                        while (true)
-                        {
-                            Console.WriteLine($"Type:{client.Utype}. Machine Name:{client.Uname}. Running as primary. [{DateTime.UtcNow}]");
-                            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-                        }
-                    }),
-                null);
+                    () => Task.Run(
+                        async () =>
+                            {
+                                while (true)
+                                {
+                                    Console.WriteLine($"Type:{client.Utype}. Machine Name:{client.Uname}. Running as primary. [{DateTime.UtcNow}]");
+                                    await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                                }
+                            }),
+                    null).ConfigureAwait(false);
             }
         }
     }

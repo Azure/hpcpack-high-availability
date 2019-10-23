@@ -43,14 +43,14 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
 
         public async Task HeartBeatAsync(HeartBeatEntryDTO entryDTO)
         {
-            await this.LoseMessage();
-            await this.membershipClientImplementation.HeartBeatAsync(entryDTO);
+            await this.LoseMessage().ConfigureAwait(false);
+            await this.membershipClientImplementation.HeartBeatAsync(entryDTO).ConfigureAwait(false);
         }
 
         public async Task<HeartBeatEntry> GetHeartBeatEntryAsync(string utype)
         {
             await this.LoseMessage().ConfigureAwait(false);
-            var res = await this.membershipClientImplementation.GetHeartBeatEntryAsync(utype);
+            var res = await this.membershipClientImplementation.GetHeartBeatEntryAsync(utype).ConfigureAwait(false);
             await this.LoseMessage().ConfigureAwait(false);
             return res;
         }

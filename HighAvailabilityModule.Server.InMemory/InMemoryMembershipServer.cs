@@ -76,7 +76,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Server.InMemory
                 Trace.TraceInformation($"[{now:O}][Server][{operationGuid}] Current leader set to {entryDTO.Uuid}");
             }
 
-            await Task.Delay(this.ReplyDelay);
+            await Task.Delay(this.ReplyDelay).ConfigureAwait(false);
         }
 
         public Task<HeartBeatEntry> GetHeartBeatEntryAsync(string utype) => this.GetHeartBeatEntryAsync(utype, DateTime.UtcNow);

@@ -93,14 +93,14 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
                 {
                     try
                     {
-                        await Task.WhenAll(this.containers.OrderBy(_ => Guid.NewGuid()).Take(tofail).Select(c => c.CrashRestart()));
+                        await Task.WhenAll(this.containers.OrderBy(_ => Guid.NewGuid()).Take(tofail).Select(c => c.CrashRestart())).ConfigureAwait(false);
                     }
                     catch (OperationCanceledException)
                     {
                     }
                 }
 
-                await Task.Delay(this.Interval * 2);
+                await Task.Delay(this.Interval * 2).ConfigureAwait(false);
             }
         }
 
@@ -110,7 +110,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases.Infrastructure
             {
                 try
                 {
-                    var entry = await this.judge.GetHeartBeatEntryAsync(this.Utype);
+                    var entry = await this.judge.GetHeartBeatEntryAsync(this.Utype).ConfigureAwait(false);
                     var livingClients = this.GetLivingClientIds();
                     Trace.TraceInformation($"Healthy:{livingClients.Contains(entry.Uuid)}, livingClients: {string.Join(",", livingClients)} Client Type: {this.Utype}");
                     Console.WriteLine($"Healthy:{livingClients.Contains(entry.Uuid)}, livingClients: {string.Join(",", livingClients)} Client Type: {this.Utype}");

@@ -72,8 +72,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 
             try
             {
-                await con.OpenAsync();
-                await comStr.ExecuteNonQueryAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                await comStr.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -102,8 +102,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 
             try
             {
-                await con.OpenAsync();
-                SqlDataReader ReturnedEntry = await comStr.ExecuteReaderAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                SqlDataReader ReturnedEntry = await comStr.ExecuteReaderAsync().ConfigureAwait(false);
                 if (ReturnedEntry.HasRows)
                 {
                     ReturnedEntry.Read();
@@ -145,8 +145,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Client.SQL
 
             try
             {
-                await con.OpenAsync();
-                SqlDataReader ReturnedEntry = await comStr.ExecuteReaderAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                SqlDataReader ReturnedEntry = await comStr.ExecuteReaderAsync().ConfigureAwait(false);
                 if (ReturnedEntry.HasRows)
                 {
                     ReturnedEntry.Read();
