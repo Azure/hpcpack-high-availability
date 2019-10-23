@@ -38,7 +38,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.TestCases
             {
                 try
                 {
-                    await controller.WatchResult();
+                    await controller.WatchResult().ConfigureAwait(false);
                 }
                 catch (InvalidOperationException ex)
                 {

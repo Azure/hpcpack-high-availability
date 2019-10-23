@@ -28,10 +28,10 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Server.Rest.Controllers
         [HttpPost("heartbeat")]
         public async Task HeartBeatAsync([FromBody] HeartBeatEntryDTO entryDTO)
         {
-            await this.membershipImpl.HeartBeatAsync(entryDTO);
+            await this.membershipImpl.HeartBeatAsync(entryDTO).ConfigureAwait(false);
         }
 
         [HttpGet("heartbeat/{utype}")]
-        public async Task<HeartBeatEntry> GetHeartBeatEntryAsync(string utype) => await this.membershipImpl.GetHeartBeatEntryAsync(utype);
+        public async Task<HeartBeatEntry> GetHeartBeatEntryAsync(string utype) => await this.membershipImpl.GetHeartBeatEntryAsync(utype).ConfigureAwait(false);
     }
 }

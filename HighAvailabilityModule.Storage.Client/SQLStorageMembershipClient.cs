@@ -59,8 +59,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
             try
             {
-                await con.OpenAsync();
-                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync().ConfigureAwait(false);
                 if (ReturnedValue.HasRows)
                 {
                     ReturnedValue.Read();
@@ -100,15 +100,15 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             }
             else if (type == "System.Int32")
             {
-                return Int32.Parse(value);
+                return int.Parse(value);
             }
             else if (type == "System.Int64")
             {
-                return Int64.Parse(value);
+                return long.Parse(value);
             }
             else if (type == "System.Double")
             {
-                return Double.Parse(value);
+                return double.Parse(value);
             }
             else if (type == "System.String[]")
             {
@@ -127,7 +127,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<Guid> TryGetGuidAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -147,7 +147,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<string> TryGetStringAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -167,7 +167,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<int> TryGetIntAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -187,7 +187,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<long> TryGetLongAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -207,7 +207,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<double> TryGetDoubleAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -227,7 +227,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<string[]> TryGetStringArrayAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -247,7 +247,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
         public async Task<byte[]> TryGetByteArrayAsync(string path, string key)
         {
-            var getDataEntry = await GetDataEntryAsync(path, key);
+            var getDataEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
             value = getDataEntry.value;
             type = getDataEntry.type;
 
@@ -279,8 +279,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
             try
             {
-                await con.OpenAsync();
-                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync().ConfigureAwait(false);
                 if (ReturnedValue.HasRows)
                 {
                     ReturnedValue.Read();
@@ -328,8 +328,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
             try
             {
-                await con.OpenAsync();
-                await comStr.ExecuteNonQueryAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                await comStr.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -392,8 +392,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
             try
             {
-                await con.OpenAsync();
-                await comStr.ExecuteNonQueryAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                await comStr.ExecuteNonQueryAsync().ConfigureAwait(false);
             }
             catch (Exception ex)
             {
@@ -422,8 +422,8 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
 
             try
             {
-                await con.OpenAsync();
-                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync();
+                await con.OpenAsync().ConfigureAwait(false);
+                SqlDataReader ReturnedValue = await comStr.ExecuteReaderAsync().ConfigureAwait(false);
                 if (ReturnedValue.HasRows)
                 {
                     while (ReturnedValue.Read())
@@ -455,7 +455,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             {
                 try
                 {
-                    var getEntry = await GetDataEntryAsync(path, key);
+                    var getEntry = await this.GetDataEntryAsync(path, key).ConfigureAwait(false);
                     value = getEntry.value;
                     type = getEntry.type;
 

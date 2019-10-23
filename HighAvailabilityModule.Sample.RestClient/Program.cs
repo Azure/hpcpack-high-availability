@@ -60,11 +60,11 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.RestClient
                 {
                     foreach (string qtype in AllType)
                     {
-                        var primary = await client.GetHeartBeatEntryAsync(qtype);
+                        var primary = await client.GetHeartBeatEntryAsync(qtype).ConfigureAwait(false);
                         if (!primary.IsEmpty)
                         {
                             Console.WriteLine($"[Query Result] Type:{primary.Utype}. Machine Num:{primary.Uname}. Running as primary. [{primary.TimeStamp}]");
-                            await Task.Delay(TimeSpan.FromSeconds(2));
+                            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
                         }
                     }
                 }
@@ -72,16 +72,16 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.RestClient
             else
             {
                 await algo.RunAsync(
-                () => Task.Run(
-                    async () =>
-                    {
-                        while (true)
-                        {
-                            Console.WriteLine($"Type:{client.Utype}. Machine Num:{client.Uname}. Running as primary. [{DateTime.UtcNow}]");
-                            await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
-                        }
-                    }),
-                null);
+                    () => Task.Run(
+                        async () =>
+                            {
+                                while (true)
+                                {
+                                    Console.WriteLine($"Type:{client.Utype}. Machine Num:{client.Uname}. Running as primary. [{DateTime.UtcNow}]");
+                                    await Task.Delay(TimeSpan.FromSeconds(2)).ConfigureAwait(false);
+                                }
+                            }),
+                    null).ConfigureAwait(false);
             }
         }
     }

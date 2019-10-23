@@ -90,7 +90,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.Runner
                     var basictest = new BasicTest(clientFactory, judge);
                     tasks[i] = basictest.Start(type);
                 }
-                await Task.WhenAny(tasks);
+                await Task.WhenAny(tasks).ConfigureAwait(false);
             }
             else if (testType == "chaos")
             {
@@ -101,7 +101,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.E2ETest.Runner
                     var basictest = new ChaosTest(clientFactory, judge);
                     tasks[i] = basictest.Start(type);
                 }
-                await Task.WhenAny(tasks);
+                await Task.WhenAny(tasks).ConfigureAwait(false);
             }
             else
             {
