@@ -13,7 +13,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Sample.SQLClient
     {
         static async Task Main(string[] args)
         {
-            TraceSource ts = MembershipWithWitness.ts;
+            TraceSource ts = MembershipWithWitness.Ts;
             ts.Switch.Level = SourceLevels.Warning;
             ts.Listeners.Add(new TextWriterTraceListener(Console.Out));
 
