@@ -19,6 +19,6 @@
         </references>
     </metadata>
     <files>
-        <file src="..\HighAvailabilityModule.Algorithm\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Algorithm.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Algorithm\bin\Release\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Algorithm.dll" target="lib\netstandard20"/>
     </files>
 </package>
