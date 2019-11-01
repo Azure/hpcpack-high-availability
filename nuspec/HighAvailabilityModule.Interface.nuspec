@@ -14,6 +14,6 @@
         </references>
     </metadata>
     <files>
-        <file src="..\HighAvailabilityModule.Interface\bin\Debug\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Interface.dll" target="lib\netstandard20"/>
+        <file src="..\HighAvailabilityModule.Interface\bin\Release\netstandard2.0\Microsoft.Hpc.HighAvailabilityModule.Interface.dll" target="lib\netstandard20"/>
     </files>
 </package>

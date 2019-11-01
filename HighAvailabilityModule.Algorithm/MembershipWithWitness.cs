@@ -36,6 +36,17 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
         private string affinityType = string.Empty;
 
+        // Performance Statistics Section
+        private double ewa = 0;
+
+        private double maxLatency = 0;
+
+        private double maxEwa = 0;
+
+        private const double Weight = 0.2;
+
+        private int failedHeartBeat = 0;
+
         private string AffinityType
         {
             get => this.affinityType;
@@ -177,19 +188,37 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                     TraceEventType.Verbose,
                     0,
                     $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}, latency: {latency}/{this.WarningLatencyMS} ms");
+
+                this.ewa = (Weight * latency) + ((1 - Weight) * this.ewa);
+                this.maxEwa = Math.Max(this.ewa, this.maxEwa);
+                this.maxLatency = Math.Max(latency, this.maxLatency);
+              
                 if (latency > this.WarningLatencyMS)
                 {
                     Ts.TraceEvent(
                         TraceEventType.Warning,
                         0,
                         $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} reached warning latency level {latency}/{this.WarningLatencyMS} ms, Client Type: {this.Utype}");
+
+                    Ts.TraceEvent(TraceEventType.Warning, 0, this.GetPerfString(latency));
+                }
+                else
+                {
+                    Ts.TraceEvent(TraceEventType.Verbose, 0, this.GetPerfString(latency));
                 }
             }
             catch (Exception ex)
             {
                 Ts.TraceEvent(TraceEventType.Warning, 0, $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Error occured when updating heartbeat entry at localtime {sendTime:O}: {ex.ToString()}");
+                Ts.TraceEvent(TraceEventType.Warning, 0, this.GetPerfString(double.NaN));
+
+                Interlocked.Increment(ref this.failedHeartBeat);
             }
         }
+
+        private string GetPerfString(double latency) =>
+            $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}](Performance) Current latency: {latency}/{this.WarningLatencyMS} ms, Max: {this.maxLatency}, Exponentially Weighted Average: {this.ewa}, Max EWA: {this.maxEwa}, Failed HB: {this.failedHeartBeat}";
+
 
         /// <summary>
         /// Checks if current process is primary process
