@@ -187,7 +187,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                 Ts.TraceEvent(
                     TraceEventType.Verbose,
                     0,
-                    $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}, latency: {latency}/{this.WarningLatencyMS} ms");
+                    $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}, latency: {latency:F1}/{this.WarningLatencyMS:F1} ms");
 
                 this.ewa = (Weight * latency) + ((1 - Weight) * this.ewa);
                 this.maxEwa = Math.Max(this.ewa, this.maxEwa);
@@ -198,7 +198,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                     Ts.TraceEvent(
                         TraceEventType.Warning,
                         0,
-                        $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} reached warning latency level {latency}/{this.WarningLatencyMS} ms, Client Type: {this.Utype}");
+                        $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} reached warning latency level {latency:F1}/{this.WarningLatencyMS:F1} ms, Client Type: {this.Utype}");
 
                     Ts.TraceEvent(TraceEventType.Warning, 0, this.GetPerfString(latency));
                 }
@@ -217,7 +217,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
         }
 
         private string GetPerfString(double latency) =>
-            $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}](Performance) Current latency: {latency}/{this.WarningLatencyMS} ms, Max: {this.maxLatency}, Exponentially Weighted Average: {this.ewa}, Max EWA: {this.maxEwa}, Failed HB: {this.failedHeartBeat}";
+            $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}](Performance) Current latency: {latency:F1}/{this.WarningLatencyMS:F1} ms, Max: {this.maxLatency:F1}, Exponentially Weighted Average: {this.ewa:F1}, Max EWA: {this.maxEwa:F1}, Failed HB: {this.failedHeartBeat}";
 
 
         /// <summary>
