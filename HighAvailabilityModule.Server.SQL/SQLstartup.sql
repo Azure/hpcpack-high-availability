@@ -98,26 +98,19 @@ CREATE PROCEDURE HeartBeat
 	@lastSeenTimeStamp datetime,
 	@now datetime = NULL
 AS
-	BEGIN TRY
-		BEGIN TRAN
-			SET NOCOUNT ON;
-			IF @now IS NULL
-				SET @now = GETDATE();
-			IF dbo.ValidInput(@uuid, @utype, @lastSeenUuid, @lastSeenUtype, @lastSeenTimeStamp, @now) = 1
-				BEGIN
-					IF NOT EXISTS (SELECT * FROM dbo.HeartBeatTable WHERE utype = @utype)
-						INSERT INTO dbo.HeartBeatTable (uuid, utype, uname, timeStamp)
-						VALUES(@uuid, @utype, @uname, @now);
-					ELSE
-						UPDATE dbo.HeartBeatTable
-						SET uuid = @uuid, utype = @utype, uname = @uname, timeStamp = @now
-						WHERE utype = @utype AND timeStamp = @lastSeenTimeStamp;
-				END
-		COMMIT TRAN
-	END TRY
-	BEGIN CATCH
-		ROLLBACK TRAN
-	END CATCH
+	SET NOCOUNT ON;
+	IF @now IS NULL
+		SET @now = GETDATE();
+	IF dbo.ValidInput(@uuid, @utype, @lastSeenUuid, @lastSeenUtype, @lastSeenTimeStamp, @now) = 1
+		BEGIN
+			IF NOT EXISTS (SELECT * FROM dbo.HeartBeatTable WHERE utype = @utype)
+				INSERT INTO dbo.HeartBeatTable (uuid, utype, uname, timeStamp)
+				VALUES(@uuid, @utype, @uname, @now);
+			ELSE
+				UPDATE dbo.HeartBeatTable
+				SET uuid = @uuid, utype = @utype, uname = @uname, timeStamp = @now
+				WHERE utype = @utype AND timeStamp = @lastSeenTimeStamp;
+		END
 GO
 
 IF OBJECT_ID('GetHeartBeat') IS NOT NULL
