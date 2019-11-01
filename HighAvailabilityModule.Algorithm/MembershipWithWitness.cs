@@ -172,11 +172,11 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                     $"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.Uuid}, {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.TimeStamp:O}, Client Type: {this.Utype}");
                 await this.Client.HeartBeatAsync(new HeartBeatEntryDTO(this.Uuid, this.Utype, this.Uname, this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry)).ConfigureAwait(false);
                 DateTime completedTime = DateTime.UtcNow;
+                double latency = (completedTime - sendTime).TotalMilliseconds;
                 Ts.TraceEvent(
                     TraceEventType.Verbose,
                     0,
-                    $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}");
-                double latency = (completedTime - sendTime).TotalMilliseconds;
+                    $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}, latency: {latency}/{this.WarningLatencyMS} ms");
                 if (latency > this.WarningLatencyMS)
                 {
                     Ts.TraceEvent(
