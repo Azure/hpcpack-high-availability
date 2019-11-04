@@ -37,15 +37,25 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
         private string affinityType = string.Empty;
 
         // Performance Statistics Section
-        private double ewa = 0;
+        private double ewa5 = 0;
 
         private double maxLatency = 0;
 
-        private double maxEwa = 0;
+        private double maxEwa5 = 0;
 
-        private const double Weight = 0.2;
+        private const double Weight5 = 0.2;
 
-        private int failedHeartBeat = 0;
+        private double ewa100 = 0;
+
+        private double maxEwa100 = 0;
+
+        private const double Weight100 = 0.01;
+
+        private int totalFailedHeartBeat = 0;
+
+        private int consecutiveFailedHeartBeat = 0;
+
+        private int maxConsecutiveFailedHeartBeat = 0;
 
         private string AffinityType
         {
@@ -183,15 +193,20 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                     $"[{sendTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O}, lastSeenHeartBeat = {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.Uuid}, {this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry.TimeStamp:O}, Client Type: {this.Utype}");
                 await this.Client.HeartBeatAsync(new HeartBeatEntryDTO(this.Uuid, this.Utype, this.Uname, this.lastSeenHeartBeatDict[LastSeenHeartBeatString].Entry)).ConfigureAwait(false);
                 DateTime completedTime = DateTime.UtcNow;
+                this.consecutiveFailedHeartBeat = 0;
                 double latency = (completedTime - sendTime).TotalMilliseconds;
                 Ts.TraceEvent(
                     TraceEventType.Verbose,
                     0,
                     $"[{completedTime:O}][Protocol][{this.Uuid}] Sending heartbeat with UUID = {this.Uuid} at localtime {sendTime:O} completed, Client Type: {this.Utype}, latency: {latency:F1}/{this.WarningLatencyMS:F1} ms");
-
-                this.ewa = (Weight * latency) + ((1 - Weight) * this.ewa);
-                this.maxEwa = Math.Max(this.ewa, this.maxEwa);
+                
                 this.maxLatency = Math.Max(latency, this.maxLatency);
+
+                this.ewa5 = (Weight5 * latency) + ((1 - Weight5) * this.ewa5);
+                this.maxEwa5 = Math.Max(this.ewa5, this.maxEwa5);
+
+                this.ewa100 = (Weight100 * latency) + ((1 - Weight100) * this.ewa100);
+                this.maxEwa100 = Math.Max(this.ewa100, this.maxEwa100);
               
                 if (latency > this.WarningLatencyMS)
                 {
@@ -212,12 +227,14 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
                 Ts.TraceEvent(TraceEventType.Warning, 0, $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}] Error occured when updating heartbeat entry at localtime {sendTime:O}: {ex.ToString()}");
                 Ts.TraceEvent(TraceEventType.Warning, 0, this.GetPerfString(double.NaN));
 
-                Interlocked.Increment(ref this.failedHeartBeat);
+                Interlocked.Increment(ref this.totalFailedHeartBeat);
+                Interlocked.Increment(ref this.consecutiveFailedHeartBeat);
+                this.maxConsecutiveFailedHeartBeat = Math.Max(this.consecutiveFailedHeartBeat, this.maxConsecutiveFailedHeartBeat);
             }
         }
 
         private string GetPerfString(double latency) =>
-            $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}](Performance) Current latency: {latency:F1}/{this.WarningLatencyMS:F1} ms, Max: {this.maxLatency:F1}, Exponentially Weighted Average: {this.ewa:F1}, Max EWA: {this.maxEwa:F1}, Failed HB: {this.failedHeartBeat}";
+            $"[{DateTime.UtcNow:O}][Protocol][{this.Uuid}](Performance) Latency(C/M/W/T): {latency:F1} / {this.maxLatency:F1} / {this.WarningLatencyMS:F1} / {this.HeartBeatTimeout.TotalMilliseconds:F1}, EWA(5/100/M5/M100): {this.ewa5:F1} / {this.ewa100:F1} / {this.maxEwa5:F1} / {this.maxEwa100:F1}, Failed HB(C/M/T): {this.consecutiveFailedHeartBeat} / {this.maxConsecutiveFailedHeartBeat} / {this.totalFailedHeartBeat}";
 
 
         /// <summary>
