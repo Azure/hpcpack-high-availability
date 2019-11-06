@@ -24,7 +24,7 @@ steps:
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber)'
+    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber) /p:AssemblyVersion=1.0.0.0'
 
 - task: DotNetCoreCLI@2
   inputs:
