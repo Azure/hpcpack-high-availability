@@ -10,7 +10,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Algorithm
 
     using Microsoft.Hpc.HighAvailabilityModule.Interface;
 
-    public class MembershipWithWitness
+    public class MembershipWithWitness : IMembershipAlgorithm
     {
         public string Uuid { get; }
 
