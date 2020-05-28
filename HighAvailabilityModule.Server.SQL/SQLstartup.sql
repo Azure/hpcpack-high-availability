@@ -30,7 +30,7 @@ AS
 		DECLARE @TimeOut int;
 		SELECT @TimeOut = heartbeatTimeOut FROM dbo.ParameterTable;
 		IF (NOT EXISTS(SELECT * FROM dbo.HeartBeatTable WHERE utype = @utype))
-			OR (DATEDIFF(MILLISECOND, (SELECT timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype), @now) >= @TimeOut)
+			OR (DATEDIFF_BIG(MILLISECOND, (SELECT timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype), @now) >= @TimeOut)
 			SET @InValid = 1;
 		ELSE
 			SET @InValid = 0;
