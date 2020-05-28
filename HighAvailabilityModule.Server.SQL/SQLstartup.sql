@@ -28,9 +28,14 @@ AS
 	BEGIN
 		DECLARE @InValid bit;
 		DECLARE @TimeOut int;
+		DECLARE @TimeOutMin int;
+		DECLARE @OrgTime datetime;
 		SELECT @TimeOut = heartbeatTimeOut FROM dbo.ParameterTable;
+		SELECT @orgTime = timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype;
+		SET @TimeOutMin = @TimeOut/60000 + 2
 		IF (NOT EXISTS(SELECT * FROM dbo.HeartBeatTable WHERE utype = @utype))
-			OR (DATEDIFF(MILLISECOND, (SELECT timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype), @now) >= @TimeOut)
+			OR (DATEDIFF(MINUTE, @orgTime, @now) >= @TimeOutMin)
+			OR (DATEDIFF(MILLISECOND, @orgTime, @now) >= @TimeOut)
 			SET @InValid = 1;
 		ELSE
 			SET @InValid = 0;
