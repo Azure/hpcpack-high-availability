@@ -18,24 +18,29 @@ VALUES(5000);
 GO
 
 IF OBJECT_ID('HeartBeatInvalid') IS NOT NULL
-	DROP FUNCTION HeartBeatInvalid;
+    DROP FUNCTION HeartBeatInvalid;
 GO
 CREATE FUNCTION HeartBeatInvalid
 (@utype nvarchar(50),
 @now datetime)
 RETURNS bit
 AS
-	BEGIN
-		DECLARE @InValid bit;
-		DECLARE @TimeOut int;
-		SELECT @TimeOut = heartbeatTimeOut FROM dbo.ParameterTable;
-		IF (NOT EXISTS(SELECT * FROM dbo.HeartBeatTable WHERE utype = @utype))
-			OR (DATEDIFF(MILLISECOND, (SELECT timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype), @now) >= @TimeOut)
-			SET @InValid = 1;
-		ELSE
-			SET @InValid = 0;
-		RETURN @InValid
-	END
+    BEGIN
+        DECLARE @InValid bit;
+        DECLARE @TimeOut int;
+        DECLARE @TimeOutInMin int;
+        DECLARE @orgTime datetime;
+        SELECT @TimeOut = heartbeatTimeOut FROM dbo.ParameterTable;
+        SELECT @orgTime = timeStamp FROM dbo.HeartBeatTable WHERE utype = @utype;
+        SET @TimeOutInMin = CEILING((@TimeOut + 0.0)/60000) + 1
+        IF (@orgTime IS NULL)
+            OR (ABS(DATEDIFF(MINUTE, @orgTime, @now)) >= @TimeOutInMin)
+            OR (DATEDIFF(MILLISECOND, @orgTime, @now) >= @TimeOut)
+            SET @InValid = 1;
+        ELSE
+            SET @InValid = 0;
+        RETURN @InValid
+    END
 GO
 
 IF OBJECT_ID('LastSeenEntryValid') IS NOT NULL
