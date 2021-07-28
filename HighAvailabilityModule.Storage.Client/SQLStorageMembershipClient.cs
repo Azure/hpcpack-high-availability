@@ -324,7 +324,7 @@ namespace Microsoft.Hpc.HighAvailabilityModule.Storage.Client
             comStr.Parameters.Add("@dkey", SqlDbType.NVarChar).Value = key;
             comStr.Parameters.Add("@dvalue", SqlDbType.NVarChar).Value = value;
             comStr.Parameters.Add("@dtype", SqlDbType.NVarChar).Value = type;
-            comStr.Parameters.Add("@lastOperationTime", SqlDbType.NVarChar).Value = lastOperationTime;
+            comStr.Parameters.Add("@lastOperationTime", SqlDbType.DateTime).Value = lastOperationTime;
 
             try
             {
