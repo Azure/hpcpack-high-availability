@@ -17,20 +17,29 @@ variables:
 steps:
 - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
+- task: UseDotNet@2
+  displayName: 'Use .NET Core sdk'
   inputs:
-    restoreSolution: '$(solution)'
+    packageType: sdk
+    version: 2.x
+    installationPath: $(Agent.ToolsDirectory)/dotnet
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: 'restore'
+    projects: '$(solution)'
+    feedsToUse: 'select'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber) /p:AssemblyVersion=1.0.0.0'
+    arguments: '--no-restore --configuration $(BuildConfiguration) /p:Version=$(Build.BuildNumber) /p:AssemblyVersion=1.0.0.0'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: 'test'
     projects: '**/*Test/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--no-build --no-restore --configuration $(buildConfiguration) --collect "Code coverage"'
 
 - task: SqlAzureDacpacDeployment@1
   inputs:
